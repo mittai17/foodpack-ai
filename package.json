@@ -1,0 +1,22 @@
+{
+  "name": "foodpack-ai",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter @foodpack/web dev",
+    "dev:api": "pnpm --filter @foodpack/api start:dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @foodpack/api prisma:generate",
+    "db:migrate": "pnpm --filter @foodpack/api prisma:migrate",
+    "db:seed": "pnpm --filter @foodpack/api prisma:seed"
+  },
+  "devDependencies": {
+    "supabase": "^2.117.0"
+  }
+}

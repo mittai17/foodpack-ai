@@ -1,0 +1,135 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * FoodPack AI design tokens — warm sand + natural green, scientific/premium
+ * SaaS feel. Light mode is the primary reference; dark mode mirrors it in a
+ * deep warm charcoal rather than pure black/blue-gray.
+ */
+:root {
+  --background: #f6f2e8;
+  --foreground: #221f19;
+  --card: #ffffff;
+  --card-foreground: #221f19;
+  --popover: #ffffff;
+  --popover-foreground: #221f19;
+  --primary: #15803d;
+  --primary-foreground: #ffffff;
+  --secondary: #eee7d6;
+  --secondary-foreground: #221f19;
+  --muted: #eee7d6;
+  --muted-foreground: #6f6656;
+  --accent: #e3f3e8;
+  --accent-foreground: #14532d;
+  --destructive: #dc2626;
+  --border: #e5dcc6;
+  --input: #e5dcc6;
+  --ring: #15803d;
+  --chart-1: #15803d;
+  --chart-2: #2563eb;
+  --chart-3: #d97706;
+  --chart-4: #7c3aed;
+  --chart-5: #db2777;
+  --radius: 0.75rem;
+  --sidebar: #f1ead9;
+  --sidebar-foreground: #221f19;
+  --sidebar-primary: #15803d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dcefe1;
+  --sidebar-accent-foreground: #14532d;
+  --sidebar-border: #e5dcc6;
+  --sidebar-ring: #15803d;
+}
+
+.dark {
+  --background: #17150f;
+  --foreground: #f3efe2;
+  --card: #1f1c15;
+  --card-foreground: #f3efe2;
+  --popover: #1f1c15;
+  --popover-foreground: #f3efe2;
+  --primary: #22c55e;
+  --primary-foreground: #0b1f13;
+  --secondary: #2a2519;
+  --secondary-foreground: #f3efe2;
+  --muted: #2a2519;
+  --muted-foreground: #b3aa93;
+  --accent: #1c3323;
+  --accent-foreground: #86efac;
+  --destructive: #f87171;
+  --border: #ffffff1a;
+  --input: #ffffff21;
+  --ring: #22c55e;
+  --chart-1: #4ade80;
+  --chart-2: #60a5fa;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #f472b6;
+  --sidebar: #1b1811;
+  --sidebar-foreground: #f3efe2;
+  --sidebar-primary: #22c55e;
+  --sidebar-primary-foreground: #0b1f13;
+  --sidebar-accent: #1c3323;
+  --sidebar-accent-foreground: #86efac;
+  --sidebar-border: #ffffff14;
+  --sidebar-ring: #22c55e;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

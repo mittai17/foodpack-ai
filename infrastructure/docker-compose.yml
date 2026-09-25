@@ -1,0 +1,41 @@
+name: foodpack-ai
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: foodpack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: foodpack
+      POSTGRES_PASSWORD: foodpack
+      POSTGRES_DB: foodpack
+    ports:
+      - "5432:5432"
+    volumes:
+      - foodpack_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foodpack -d foodpack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: foodpack-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  foodpack_postgres_data:

@@ -1,0 +1,406 @@
+// FoodPack AI — core scientific + application schema.
+// Every measured scientific value carries unit/range/condition/source/confidence
+// so the API can honestly report "insufficient validated data" instead of guessing.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  USER
+  FOOD_EXPERT
+  PACKAGING_EXPERT
+  ADMIN
+}
+
+enum ObjectiveType {
+  MAX_SHELF_LIFE
+  MIN_COST
+  SUSTAINABILITY
+  BALANCED
+}
+
+enum StorageType {
+  AMBIENT
+  CHILLED
+  FROZEN
+}
+
+enum TransportType {
+  LOCAL
+  LONG_DISTANCE
+  EXPORT
+}
+
+enum ProductState {
+  FRESH
+  CUT_READY_TO_EAT
+  PROCESSED
+}
+
+enum ConfidenceLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ---------- Users & Projects ----------
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  // Null for users provisioned just-in-time from a verified Supabase Auth
+  // token — Supabase owns the credential, we only mirror the profile/role.
+  passwordHash String?
+  name         String?
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  analyses Analysis[]
+  projects Project[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  analyses Analysis[]
+
+  @@index([userId])
+  @@map("projects")
+}
+
+// ---------- Food knowledge base ----------
+
+model FoodCategory {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+
+  foods Food[]
+
+  @@map("food_categories")
+}
+
+model Food {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  name           String
+  commonNames    String[]
+  scientificName String?
+  categoryId     String
+  category       FoodCategory @relation(fields: [categoryId], references: [id])
+  imageUrl       String?
+  description    String?
+  isFreshProduce Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  properties        FoodProperty[]
+  storageConditions FoodStorageCondition[]
+  respirationData   FoodRespirationData[]
+  shelfLifeData     FoodShelfLifeData[]
+  sources           FoodSource[]
+  analyses          Analysis[]
+
+  @@index([categoryId])
+  @@map("foods")
+}
+
+model FoodSource {
+  id          String  @id @default(uuid())
+  foodId      String
+  food        Food    @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  citation    String
+  publication String?
+  year        Int?
+  url         String?
+
+  properties        FoodProperty[]
+  storageConditions FoodStorageCondition[]
+  respirationData   FoodRespirationData[]
+  shelfLifeData     FoodShelfLifeData[]
+
+  @@index([foodId])
+  @@map("food_sources")
+}
+
+// e.g. MOISTURE_CONTENT, PH, FAT_CONTENT, WATER_ACTIVITY
+model FoodProperty {
+  id               String           @id @default(uuid())
+  foodId           String
+  food             Food             @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  propertyType     String
+  value            Float?
+  unit             String?
+  minValue         Float?
+  maxValue         Float?
+  temperatureC     Float?
+  relativeHumidity Float?
+  sourceId         String?
+  source           FoodSource?      @relation(fields: [sourceId], references: [id])
+  confidence       ConfidenceLevel  @default(MEDIUM)
+  notes            String?
+
+  @@index([foodId, propertyType])
+  @@map("food_properties")
+}
+
+model FoodStorageCondition {
+  id          String          @id @default(uuid())
+  foodId      String
+  food        Food            @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  storageType StorageType
+  minTempC    Float?
+  maxTempC    Float?
+  minRH       Float?
+  maxRH       Float?
+  notes       String?
+  sourceId    String?
+  source      FoodSource?     @relation(fields: [sourceId], references: [id])
+
+  @@index([foodId, storageType])
+  @@map("food_storage_conditions")
+}
+
+model FoodRespirationData {
+  id                String          @id @default(uuid())
+  foodId            String
+  food              Food            @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  temperatureC      Float
+  co2ProductionRate Float?
+  o2ConsumptionRate Float?
+  unit              String?
+  sourceId          String?
+  source            FoodSource?     @relation(fields: [sourceId], references: [id])
+  confidence        ConfidenceLevel @default(MEDIUM)
+
+  @@index([foodId])
+  @@map("food_respiration_data")
+}
+
+model FoodShelfLifeData {
+  id               String          @id @default(uuid())
+  foodId           String
+  food             Food            @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  storageType      StorageType
+  minDays          Int?
+  maxDays          Int?
+  packagingContext String?
+  sourceId         String?
+  source           FoodSource?     @relation(fields: [sourceId], references: [id])
+  confidence       ConfidenceLevel @default(MEDIUM)
+
+  @@index([foodId, storageType])
+  @@map("food_shelf_life_data")
+}
+
+// ---------- Packaging knowledge base ----------
+
+model PackagingMaterial {
+  id              String   @id @default(uuid())
+  slug            String   @unique
+  name            String
+  materialType    String
+  description     String?
+  recyclable      Boolean?
+  monoMaterial    Boolean?
+  biodegradable   Boolean?
+  approxCostMin   Float?
+  approxCostMax   Float?
+  costUnit        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  properties MaterialProperty[]
+  sources    MaterialSource[]
+  layers     PackagingStructureLayer[]
+  recommendations Recommendation[]
+
+  @@map("packaging_materials")
+}
+
+model MaterialSource {
+  id          String  @id @default(uuid())
+  materialId  String
+  material    PackagingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  citation    String
+  publication String?
+  year        Int?
+  url         String?
+
+  properties MaterialProperty[]
+
+  @@index([materialId])
+  @@map("material_sources")
+}
+
+// e.g. OTR, WVTR, TENSILE_STRENGTH, PUNCTURE_RESISTANCE, SEAL_STRENGTH,
+// TEMP_RESISTANCE_MIN, TEMP_RESISTANCE_MAX, TRANSPARENCY
+model MaterialProperty {
+  id                  String            @id @default(uuid())
+  materialId          String
+  material            PackagingMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  propertyType        String
+  value               Float?
+  unit                String?
+  minValue            Float?
+  maxValue            Float?
+  testConditionTempC  Float?
+  testConditionRH     Float?
+  sourceId            String?
+  source              MaterialSource?   @relation(fields: [sourceId], references: [id])
+  confidence          ConfidenceLevel   @default(MEDIUM)
+  notes               String?
+
+  @@index([materialId, propertyType])
+  @@map("material_properties")
+}
+
+model PackagingStructure {
+  id            String   @id @default(uuid())
+  slug          String   @unique
+  name          String
+  structureType String
+  description   String?
+  supportsMap   Boolean  @default(false)
+  microPerforated Boolean @default(false)
+  approxCostMin Float?
+  approxCostMax Float?
+  costUnit      String?
+  // The pack-quantity range this structure is actually sold/used at, e.g. a
+  // flexible pouch (0.1-2kg retail unit) vs. a woven sack (25-50kg) vs. an
+  // FIBC jumbo bag (500-2000kg+ bulk). Null on either end means unbounded.
+  minPackWeightKg Float?
+  maxPackWeightKg Float?
+  // Which commodity physical forms this structure is actually used for in
+  // practice (FRESH_PRODUCE, GRAIN_PULSE, POWDER_SPICE, LIQUID, NUTS_SNACKS)
+  // — e.g. a woven sack is never used for milk, a bottle is never used for
+  // rice. Empty = general-purpose, not restricted to a specific form.
+  applicableProductForms String[] @default([])
+
+  layers          PackagingStructureLayer[]
+  recommendations Recommendation[]
+
+  @@map("packaging_structures")
+}
+
+model PackagingStructureLayer {
+  id                  String              @id @default(uuid())
+  structureId         String
+  structure           PackagingStructure  @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  order               Int
+  layerRole           String // OUTER, BARRIER, ADHESIVE, SEAL, TRAY
+  materialId           String
+  material             PackagingMaterial   @relation(fields: [materialId], references: [id])
+  thicknessMinMicron   Float?
+  thicknessMaxMicron   Float?
+
+  @@index([structureId])
+  @@map("packaging_structure_layers")
+}
+
+// ---------- Analysis & Recommendation ----------
+
+model Analysis {
+  id                  String         @id @default(uuid())
+  userId              String
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId           String?
+  project             Project?       @relation(fields: [projectId], references: [id])
+  foodId              String
+  food                Food           @relation(fields: [foodId], references: [id])
+  status              AnalysisStatus @default(PENDING)
+  productState        ProductState
+  storageType         StorageType
+  transportType       TransportType
+  targetShelfLifeDays Int
+  packageWeightKg     Float          @default(1)
+  objective           ObjectiveType  @default(BALANCED)
+  advancedInputs      Json?
+  errorMessage        String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  requirement     Requirement?
+  recommendations Recommendation[]
+
+  @@index([userId])
+  @@index([foodId])
+  @@map("analyses")
+}
+
+model Requirement {
+  id                 String          @id @default(uuid())
+  analysisId         String          @unique
+  analysis           Analysis        @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  targetOtrMin       Float?
+  targetOtrMax       Float?
+  otrUnit            String?
+  targetWvtrMin      Float?
+  targetWvtrMax      Float?
+  wvtrUnit           String?
+  mapRecommended     Boolean?
+  recommendedO2Min   Float?
+  recommendedO2Max   Float?
+  recommendedCo2Min  Float?
+  recommendedCo2Max  Float?
+  sealabilityRequired Boolean        @default(true)
+  mechanicalNotes    String?
+  assumptions        String[]
+  limitingFactors    String[]
+  dataConfidence     ConfidenceLevel @default(MEDIUM)
+
+  @@map("requirements")
+}
+
+model Recommendation {
+  id                        String              @id @default(uuid())
+  analysisId                String
+  analysis                  Analysis            @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  materialId                String?
+  material                  PackagingMaterial?  @relation(fields: [materialId], references: [id])
+  structureId                String?
+  structure                  PackagingStructure? @relation(fields: [structureId], references: [id])
+  rank                       Int
+  isRecommended              Boolean             @default(false)
+  overallScore                Float
+  scoreBreakdown              Json
+  estimatedShelfLifeMinDays  Int?
+  estimatedShelfLifeMaxDays  Int?
+  shelfLifeConfidence         ConfidenceLevel     @default(MEDIUM)
+  estimatedCostMin           Float?
+  estimatedCostMax           Float?
+  costUnit                    String?
+  sustainabilityNotes         String?
+  explanation                  String[]
+  aiExplanation                String?
+  createdAt                    DateTime            @default(now())
+
+  @@index([analysisId])
+  @@map("recommendations")
+}
