@@ -9,6 +9,12 @@ coverage/
 .env
 .env.local
 .env.*.local
+# Tracked on purpose: local-only dev defaults (docker-compose creds, no real
+# secrets) so teammates get a working setup without recreating it by hand.
+# If a real API key/credential ever goes in either file, stop tracking it
+# first (git rm --cached <path>) before filling it in.
+!apps/api/.env
+!apps/web/.env.local
 .DS_Store
 .turbo/
 apps/api/generated/
