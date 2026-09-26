@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import {
   OBJECTIVE_LABELS,
   OBJECTIVES,
@@ -12,14 +12,19 @@ import {
   STORAGE_TYPES,
   TRANSPORT_LABELS,
   TRANSPORT_TYPES,
+  PACKAGING_FORMATS,
+  PACKAGING_FORMAT_LABELS,
   type ObjectiveType,
   type ProductState,
   type StorageType,
   type TransportType,
+  type PackagingFormat,
+  type AdvancedInputs,
 } from '@foodpack/shared';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFoods } from '@/hooks/use-foods';
 import { useCreateAnalysis } from '@/hooks/use-analysis';
@@ -48,11 +53,31 @@ export function QuickStart() {
 
   const [foodId, setFoodId] = useState<string | null>(null);
   const [productState, setProductState] = useState<ProductState>('FRESH');
+  const [packagingFormat, setPackagingFormat] = useState<PackagingFormat>('AUTO');
   const [storageType, setStorageType] = useState<StorageType>('CHILLED');
   const [transportType, setTransportType] = useState<TransportType>('LOCAL');
   const [shelfLifeDays, setShelfLifeDays] = useState(21);
   const [packageWeightKg, setPackageWeightKg] = useState(1);
   const [objective, setObjective] = useState<ObjectiveType>('BALANCED');
+  
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [advancedInputs, setAdvancedInputs] = useState<AdvancedInputs>({});
+
+  const selectedFood = foods?.items.find((f) => f.id === foodId);
+  const categorySlug = selectedFood?.category?.slug || '';
+  
+  // Dynamic fields logic
+  const isProduce = categorySlug === 'fruits' || categorySlug === 'vegetables';
+  const isDry = categorySlug === 'grains-cereals' || categorySlug === 'pulses' || categorySlug === 'spices';
+  const isOily = categorySlug === 'nuts' || categorySlug === 'processed-bakery';
+
+  const updateAdvanced = (key: keyof AdvancedInputs, value: string) => {
+    const num = parseFloat(value);
+    setAdvancedInputs(prev => ({
+      ...prev,
+      [key]: isNaN(num) ? undefined : num
+    }));
+  };
 
   async function handleGenerate() {
     if (!foodId) {
@@ -68,7 +93,9 @@ export function QuickStart() {
         targetShelfLifeDays: shelfLifeDays,
         packageWeightKg,
         objective,
-        advancedMode: false,
+        packagingFormat: packagingFormat === 'AUTO' ? undefined : packagingFormat,
+        advancedMode,
+        advancedInputs: advancedMode ? advancedInputs : undefined,
       });
       router.push(`/analysis/${result.id}`);
     } catch (error) {
@@ -81,12 +108,12 @@ export function QuickStart() {
       <CardHeader>
         <CardTitle>Quick Start</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-4">
         <Field label="Food">
-          <Select value={foodId} onValueChange={setFoodId}>
+          <Select value={foodId ?? undefined} onValueChange={setFoodId}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a food">
-                {(v: string | null) => foods?.items.find((f) => f.id === v)?.name ?? 'Select a food'}
+                {(v: string | undefined) => foods?.items.find((f) => f.id === v)?.name ?? 'Select a food'}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -99,7 +126,7 @@ export function QuickStart() {
           </Select>
         </Field>
 
-        <Field label="Type">
+        <Field label="Product Form">
           <Select value={productState} onValueChange={(v) => setProductState(v as ProductState)}>
             <SelectTrigger className="w-full">
               <SelectValue>{(v: ProductState) => PRODUCT_STATE_LABELS[v]}</SelectValue>
@@ -179,8 +206,39 @@ export function QuickStart() {
             </SelectContent>
           </Select>
         </Field>
+        
+        <Field label="Packaging Format">
+          <Select value={packagingFormat} onValueChange={(v) => setPackagingFormat(v as PackagingFormat)}>
+            <SelectTrigger className="w-full">
+              <SelectValue>{(v: PackagingFormat) => PACKAGING_FORMAT_LABELS[v]}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {PACKAGING_FORMATS.map((f) => (
+                <SelectItem key={f} value={f}>
+                  {PACKAGING_FORMAT_LABELS[f]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Field>
 
-        <Field label="What matters most?">
+        {isProduce && (
+          <div className="rounded bg-secondary/30 p-2 text-xs text-muted-foreground border">
+             Considering respiration/MAP automatically.
+          </div>
+        )}
+        {isDry && (
+          <div className="rounded bg-secondary/30 p-2 text-xs text-muted-foreground border">
+             Focusing on moisture/oxygen protection automatically.
+          </div>
+        )}
+        {isOily && (
+          <div className="rounded bg-secondary/30 p-2 text-xs text-muted-foreground border">
+             Focusing on oxidation/light protection automatically.
+          </div>
+        )}
+
+        <Field label="Main problem / objective">
           <Select value={objective} onValueChange={(v) => setObjective(v as ObjectiveType)}>
             <SelectTrigger className="w-full">
               <SelectValue>{(v: ObjectiveType) => OBJECTIVE_LABELS[v]}</SelectValue>
@@ -195,9 +253,87 @@ export function QuickStart() {
           </Select>
         </Field>
 
-        <Button className="w-full" onClick={handleGenerate} disabled={createAnalysis.isPending}>
-          <Sparkles className="h-4 w-4" />
-          {createAnalysis.isPending ? 'Analyzing…' : 'Generate Recommendation'}
+        <div className="border-t pt-2">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="w-full justify-between p-0 font-normal hover:bg-transparent"
+            onClick={() => setAdvancedMode(!advancedMode)}
+          >
+            <span className="text-sm">Advanced / Expert Mode</span>
+            {advancedMode ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </Button>
+          
+          {advancedMode && (
+            <div className="mt-3 grid gap-3 rounded-md bg-secondary/20 p-3">
+              <Field label="Moisture Content (%) (User-provided)">
+                <Input 
+                  type="number" 
+                  className="h-8 text-sm"
+                  placeholder="e.g. 15" 
+                  value={advancedInputs.moistureContentPercent ?? ''} 
+                  onChange={(e) => updateAdvanced('moistureContentPercent', e.target.value)} 
+                />
+              </Field>
+              <Field label="pH (User-provided)">
+                <Input 
+                  type="number" 
+                  className="h-8 text-sm"
+                  placeholder="e.g. 4.5" 
+                  value={advancedInputs.ph ?? ''} 
+                  onChange={(e) => updateAdvanced('ph', e.target.value)} 
+                />
+              </Field>
+              {isOily && (
+                <Field label="Fat/oil Content (%) (User-provided)">
+                  <Input 
+                    type="number" 
+                    className="h-8 text-sm"
+                    placeholder="e.g. 20" 
+                    value={advancedInputs.fatContentPercent ?? ''} 
+                    onChange={(e) => updateAdvanced('fatContentPercent', e.target.value)} 
+                  />
+                </Field>
+              )}
+              {isProduce && (
+                <Field label="Respiration Rate (ml CO2/kg/hr) (User-provided)">
+                  <Input 
+                    type="number" 
+                    className="h-8 text-sm"
+                    placeholder="e.g. 10" 
+                    value={advancedInputs.respirationRateMlCo2PerKgPerHr ?? ''} 
+                    onChange={(e) => updateAdvanced('respirationRateMlCo2PerKgPerHr', e.target.value)} 
+                  />
+                </Field>
+              )}
+              <Field label="Temperature (°C) (User-provided)">
+                <Input 
+                  type="number" 
+                  className="h-8 text-sm"
+                  placeholder="e.g. 20" 
+                  value={advancedInputs.storageTemperatureC ?? ''} 
+                  onChange={(e) => updateAdvanced('storageTemperatureC', e.target.value)} 
+                />
+              </Field>
+              <Field label="Relative Humidity (%) (User-provided)">
+                <Input 
+                  type="number" 
+                  className="h-8 text-sm"
+                  placeholder="e.g. 60" 
+                  value={advancedInputs.relativeHumidityPercent ?? ''} 
+                  onChange={(e) => updateAdvanced('relativeHumidityPercent', e.target.value)} 
+                />
+              </Field>
+              <div className="text-[10px] text-muted-foreground mt-1">
+                Leave blank to use Reference values or Predicted values.
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Button className="w-full mt-2" onClick={handleGenerate} disabled={createAnalysis.isPending}>
+          <Sparkles className="h-4 w-4 mr-2" />
+          {createAnalysis.isPending ? 'Analyzing…' : 'Analyze & Recommend →'}
         </Button>
       </CardContent>
     </Card>
@@ -206,8 +342,8 @@ export function QuickStart() {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1">
-      <Label className="text-xs text-muted-foreground">{label}</Label>
+    <div className="space-y-1.5">
+      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
       {children}
     </div>
   );

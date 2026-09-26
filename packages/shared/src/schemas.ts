@@ -4,6 +4,7 @@ import {
   PRODUCT_STATES,
   STORAGE_TYPES,
   TRANSPORT_TYPES,
+  PACKAGING_FORMATS,
 } from './enums';
 
 export const advancedInputsSchema = z
@@ -31,6 +32,7 @@ export const createAnalysisSchema = z.object({
   targetShelfLifeDays: z.number().int().min(1).max(730),
   packageWeightKg: z.number().min(0.1).max(25000),
   objective: z.enum(OBJECTIVES),
+  packagingFormat: z.enum(PACKAGING_FORMATS).optional(),
   projectId: z.string().optional(),
   advancedMode: z.boolean().default(false),
   advancedInputs: advancedInputsSchema.optional(),

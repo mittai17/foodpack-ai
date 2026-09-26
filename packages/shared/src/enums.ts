@@ -19,8 +19,11 @@ export type StorageType = (typeof STORAGE_TYPES)[number];
 export const TRANSPORT_TYPES = ['LOCAL', 'LONG_DISTANCE', 'EXPORT'] as const;
 export type TransportType = (typeof TRANSPORT_TYPES)[number];
 
-export const PRODUCT_STATES = ['FRESH', 'CUT_READY_TO_EAT', 'PROCESSED'] as const;
+export const PRODUCT_STATES = ['FRESH', 'CUT_READY_TO_EAT', 'DRIED', 'PROCESSED', 'FROZEN', 'POWDERED', 'LIQUID'] as const;
 export type ProductState = (typeof PRODUCT_STATES)[number];
+
+export const PACKAGING_FORMATS = ['AUTO', 'POUCH', 'TRAY', 'BOTTLE', 'BAG', 'BOX', 'SACHET', 'CLAMSHELL', 'JAR'] as const;
+export type PackagingFormat = (typeof PACKAGING_FORMATS)[number];
 
 export const CONFIDENCE_LEVELS = ['HIGH', 'MEDIUM', 'LOW'] as const;
 export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number];
@@ -55,5 +58,21 @@ export const TRANSPORT_LABELS: Record<TransportType, string> = {
 export const PRODUCT_STATE_LABELS: Record<ProductState, string> = {
   FRESH: 'Fresh',
   CUT_READY_TO_EAT: 'Cut / ready-to-eat',
+  DRIED: 'Dried',
   PROCESSED: 'Processed',
+  FROZEN: 'Frozen',
+  POWDERED: 'Powdered',
+  LIQUID: 'Liquid',
+};
+
+export const PACKAGING_FORMAT_LABELS: Record<PackagingFormat, string> = {
+  AUTO: 'Auto-select',
+  POUCH: 'Pouch',
+  TRAY: 'Tray',
+  BOTTLE: 'Bottle',
+  BAG: 'Bag',
+  BOX: 'Box',
+  SACHET: 'Sachet',
+  CLAMSHELL: 'Clamshell',
+  JAR: 'Jar',
 };

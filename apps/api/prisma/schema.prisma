@@ -43,7 +43,11 @@ enum TransportType {
 enum ProductState {
   FRESH
   CUT_READY_TO_EAT
+  DRIED
   PROCESSED
+  FROZEN
+  POWDERED
+  LIQUID
 }
 
 enum ConfidenceLevel {
@@ -341,6 +345,7 @@ model Analysis {
   targetShelfLifeDays Int
   packageWeightKg     Float          @default(1)
   objective           ObjectiveType  @default(BALANCED)
+  packagingFormat     String?
   advancedInputs      Json?
   errorMessage        String?
   createdAt           DateTime       @default(now())

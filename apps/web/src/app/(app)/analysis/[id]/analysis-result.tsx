@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   AlertTriangle,
   Award,
@@ -97,14 +97,7 @@ export function AnalysisResult({ id }: { id: string }) {
   }
 
   if (analysis.status !== 'COMPLETED') {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center gap-3 px-6 py-16 text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="font-medium">Analyzing packaging options for {analysis.food.name}…</p>
-        </CardContent>
-      </Card>
-    );
+    return <AnalysisProgressCard foodName={analysis.food.name} />;
   }
 
   const recommended = analysis.recommendations.find((r) => r.isRecommended);
@@ -202,16 +195,56 @@ export function AnalysisResult({ id }: { id: string }) {
           </CardHeader>
           <CardContent className="space-y-2">
             {allSources.map((source) => (
-              <div key={source.id} className="rounded-lg border border-border px-3 py-2 text-sm">
-                <p className="font-medium">{source.citation}</p>
-                <p className="text-xs text-muted-foreground">
-                  {[source.publication, source.year].filter(Boolean).join(' · ') || 'Reference'}
-                </p>
+              <div key={source.id} className="rounded-lg border border-border px-3 py-2 text-sm flex gap-3 items-start">
+                <FileText className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-foreground">{source.citation}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {[source.publication, source.year].filter(Boolean).join(' · ') || 'Reference'}
+                  </p>
+                </div>
               </div>
             ))}
           </CardContent>
         </Card>
       )}
+
+      {analysis.requirement && (
+        <Card>
+          <details className="group">
+            <summary className="flex cursor-pointer items-center justify-between px-6 py-4 font-semibold outline-none hover:bg-muted/50 rounded-t-xl">
+              Assumptions & Data Sources
+              <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform group-open:rotate-180" />
+            </summary>
+            <CardContent className="space-y-4 pt-0 border-t border-border mt-2">
+              <div className="pt-4 text-sm text-muted-foreground">
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Food moisture: Reference database</li>
+                  <li>Respiration: Published research</li>
+                  <li>Packaging OTR: Manufacturer/research source</li>
+                  <li>Shelf-life: Predicted estimate</li>
+                </ul>
+              </div>
+              {analysis.requirement.assumptions && analysis.requirement.assumptions.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Specific Assumptions:</p>
+                  <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
+                    {analysis.requirement.assumptions.map((a: string, i: number) => (
+                      <li key={i}>{a}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="rounded bg-amber-50/50 p-3 text-xs text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+                Some values may require experimental validation.
+              </div>
+            </CardContent>
+          </details>
+        </Card>
+      )}
+
+      <SafetyComplianceSection recommendation={recommended} />
+      <LearnConnection />
 
       <p className="rounded-lg bg-muted px-4 py-3 text-xs text-muted-foreground">
         This is a decision-support estimate based on validated reference data and a deterministic
@@ -529,4 +562,111 @@ function collectSources(
     for (const s of layer.material.sources ?? []) seen.set(key(s), s);
   }
   return Array.from(seen.values());
+}
+
+function AnalysisProgressCard({ foodName }: { foodName: string }) {
+  const steps = [
+    'Food identified',
+    'Food properties loaded',
+    'Storage conditions evaluated',
+    'Packaging requirements calculated',
+    'Candidate materials screened',
+    'Food-contact suitability checked',
+    'Alternatives compared',
+    'Recommendation generated',
+    '3D visualization prepared',
+  ];
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 800);
+    return () => clearInterval(interval);
+  }, [steps.length]);
+
+  return (
+    <Card className="max-w-md mx-auto mt-12 overflow-hidden border-primary/20 shadow-lg">
+      <CardHeader className="bg-primary/5 pb-6">
+        <CardTitle className="text-center text-lg">Analyzing {foodName}…</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <div className="space-y-4">
+          {steps.map((step, i) => (
+            <div
+              key={step}
+              className={cn(
+                'flex items-center gap-3 text-sm transition-all duration-500',
+                i <= currentStep ? 'opacity-100 translate-x-0' : 'opacity-30 -translate-x-2'
+              )}
+            >
+              {i < currentStep ? (
+                <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+              ) : i === currentStep ? (
+                <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0" />
+              ) : (
+                <div className="h-5 w-5 rounded-full border-2 border-muted shrink-0" />
+              )}
+              <span className={cn(
+                'font-medium',
+                i < currentStep ? 'text-foreground' : i === currentStep ? 'text-primary' : 'text-muted-foreground'
+              )}>
+                {step}
+              </span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function SafetyComplianceSection({ recommendation }: { recommendation?: RecommendationCandidate }) {
+  if (!recommendation) return null;
+  // This is a placeholder for actual compliance checking logic.
+  // We don't want the AI to invent it, so we strictly check actual available data.
+  const evidenceAvailable = recommendation.structure?.layers.some((l) => l.material.sources && l.material.sources.length > 0);
+  
+  return (
+    <Card className={evidenceAvailable ? "border-green-200 bg-green-50/30 dark:border-green-900/50 dark:bg-green-900/10" : "border-amber-200 bg-amber-50/30 dark:border-amber-900/50 dark:bg-amber-900/10"}>
+      <CardContent className="flex items-center gap-4 py-4">
+        {evidenceAvailable ? (
+          <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-500 shrink-0" />
+        ) : (
+          <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-500 shrink-0" />
+        )}
+        <div>
+          <p className="font-semibold text-sm">Food-contact suitability</p>
+          <p className="text-xs text-muted-foreground">
+            {evidenceAvailable ? '✓ Evidence available based on material references.' : '⚠ Compliance evidence unavailable.'}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function LearnConnection() {
+  const topics = [
+    { label: 'What is OTR?', href: '/learn#otr' },
+    { label: 'What is WVTR?', href: '/learn#wvtr' },
+    { label: 'What is MAP?', href: '/learn#map' },
+    { label: 'Why does respiration matter?', href: '/learn#respiration' },
+    { label: 'Why does temperature matter?', href: '/learn#temperature' },
+    { label: 'How is packaging selected?', href: '/learn#selection' },
+  ];
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Learn more</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-wrap gap-2">
+        {topics.map(t => (
+          <Button key={t.label} variant="outline" size="sm" className="rounded-full text-xs hover:bg-muted" onClick={() => window.location.href = t.href}>
+            {t.label}
+          </Button>
+        ))}
+      </CardContent>
+    </Card>
+  );
 }
