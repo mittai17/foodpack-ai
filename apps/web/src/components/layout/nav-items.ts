@@ -9,6 +9,7 @@ import {
   Bookmark,
   BookOpen,
   Settings,
+  Activity,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -21,6 +22,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { translationKey: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
   { translationKey: 'newAnalysis', href: '/analysis/new', icon: PlusCircle },
+  { translationKey: 'iotSensors', href: '/iot', icon: Activity },
   { translationKey: 'myProjects', href: '/projects', icon: FolderKanban },
   { translationKey: 'foodDatabase', href: '/foods', icon: Sprout },
   { translationKey: 'packagingMaterials', href: '/materials', icon: Layers },
@@ -29,3 +31,4 @@ export const NAV_ITEMS: NavItem[] = [
   { translationKey: 'learn', href: '/learn', icon: BookOpen },
   { translationKey: 'settings', href: '/settings', icon: Settings },
 ];
+

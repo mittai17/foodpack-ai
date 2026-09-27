@@ -146,7 +146,7 @@ export default async function LandingPage() {
 
       <section className="mx-auto max-w-6xl px-4 py-16 md:px-6">
         <h2 className="text-center text-2xl font-semibold tracking-tight">
-          {t('whyFoodpackTitle')}
+          {t('whyNutriwrapTitle')}
         </h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {VALUE_PROPS.map((v) => (

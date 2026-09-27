@@ -44,7 +44,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('FoodPack AI API')
+    .setTitle('NutriWrap API')
     .setDescription(
       'Deterministic, explainable packaging recommendation API for food commodities.',
     )
@@ -62,7 +62,7 @@ async function bootstrap() {
 
   const port = Number(process.env.PORT ?? 4000);
   await app.listen(port, '0.0.0.0');
-  logger.log(`FoodPack AI API listening on port ${port}`);
+  logger.log(`NutriWrap API listening on port ${port}`);
   logger.log(`Swagger docs available at /api/docs`);
 }
 

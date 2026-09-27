@@ -5,6 +5,7 @@ import type {
   StorageType,
   TransportType,
   AnalysisStatus,
+  EnvironmentalDataSource,
 } from './enums';
 
 export interface ApiSuccess<T> {

@@ -49,12 +49,12 @@ const UNIVERSAL_TRANSPORT_QUESTION: QuestionDef = {
 const UNIVERSAL_PACKAGING_FORMAT_QUESTION: QuestionDef = {
   id: 'packaging_format',
   question: 'What kind of package do you want?',
-  helpText: 'Choose a format, or let FoodPack AI decide the best option.',
+  helpText: 'Choose a format, or let NutriWrap decide the best option.',
   type: 'single_select',
   fieldKey: 'packagingFormat',
   columns: 3,
   options: [
-    { value: 'AUTO', label: 'Auto-select', sublabel: 'Let FoodPack AI decide', icon: 'Sparkles' },
+    { value: 'AUTO', label: 'Auto-select', sublabel: 'Let NutriWrap decide', icon: 'Sparkles' },
     { value: 'POUCH', label: 'Pouch / bag', icon: 'Package' },
     { value: 'TRAY', label: 'Tray', icon: 'Square' },
     { value: 'BOTTLE', label: 'Bottle', icon: 'FlaskConical' },
@@ -74,10 +74,10 @@ const UNIVERSAL_OBJECTIVE_QUESTION: QuestionDef = {
   fieldKey: 'objective',
   columns: 2,
   options: [
-    { value: 'BALANCED', label: 'Balanced', sublabel: 'Good all-round recommendation', icon: 'Sparkles' },
-    { value: 'MAX_SHELF_LIFE', label: 'Maximum shelf life', sublabel: 'Keep it fresh as long as possible', icon: 'PackageCheck' },
-    { value: 'MIN_COST', label: 'Lowest cost', sublabel: 'Most affordable packaging', icon: 'Wallet' },
-    { value: 'SUSTAINABILITY', label: 'More sustainable', sublabel: 'Recyclable / eco-friendly', icon: 'Recycle' },
+    { value: 'BALANCED', label: 'Balanced', sublabel: 'Good all-round recommendation', icon: 'Scale' },
+    { value: 'MAX_SHELF_LIFE', label: 'Maximum shelf life', sublabel: 'Keep it fresh as long as possible', icon: 'Clock' },
+    { value: 'MIN_COST', label: 'Lowest cost', sublabel: 'Most affordable packaging', icon: 'Coins' },
+    { value: 'SUSTAINABILITY', label: 'More sustainable', sublabel: 'Recyclable / eco-friendly', icon: 'Leaf' },
   ],
 };
 
@@ -167,7 +167,7 @@ const FRUITS_TEMPLATE: QuestionnaireTemplate = {
     storageQuestion({ includeAmbient: true, includeChilled: true, includeFrozen: true }),
     ...universalTail({
       packagingFormatOptions: [
-        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let FoodPack AI decide', icon: 'Sparkles' },
+        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let NutriWrap decide', icon: 'Sparkles' },
         { value: 'POUCH', label: 'Pouch / bag', icon: 'Package' },
         { value: 'TRAY', label: 'Tray', sublabel: 'With film lid', icon: 'Square' },
         { value: 'CLAMSHELL', label: 'Clamshell', icon: 'Layers' },
@@ -203,7 +203,7 @@ const VEGETABLES_TEMPLATE: QuestionnaireTemplate = {
     storageQuestion({ includeAmbient: true, includeChilled: true, includeFrozen: true }),
     ...universalTail({
       packagingFormatOptions: [
-        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let FoodPack AI decide', icon: 'Sparkles' },
+        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let NutriWrap decide', icon: 'Sparkles' },
         { value: 'POUCH', label: 'Mesh / breathable bag', sublabel: 'For venting', icon: 'Package' },
         { value: 'TRAY', label: 'Tray + film', icon: 'Square' },
         { value: 'CLAMSHELL', label: 'Clamshell', icon: 'Layers' },
@@ -242,7 +242,7 @@ const DAIRY_MILK_TEMPLATE: QuestionnaireTemplate = {
     }),
     ...universalTail({
       packagingFormatOptions: [
-        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let FoodPack AI decide', icon: 'Sparkles' },
+        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let NutriWrap decide', icon: 'Sparkles' },
         { value: 'BOTTLE', label: 'Bottle', sublabel: 'HDPE / PET / glass', icon: 'FlaskConical' },
         { value: 'BOX', label: 'Carton', sublabel: 'Tetra Pak / gable top', icon: 'Box' },
         { value: 'POUCH', label: 'Pouch / sachet', icon: 'Package' },
@@ -781,7 +781,7 @@ const COFFEE_TEA_TEMPLATE: QuestionnaireTemplate = {
     }),
     ...universalTail({
       packagingFormatOptions: [
-        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let FoodPack AI decide', icon: 'Sparkles' },
+        { value: 'AUTO', label: 'Auto-select', sublabel: 'Let NutriWrap decide', icon: 'Sparkles' },
         { value: 'POUCH', label: 'Foil-laminate pouch', sublabel: 'With one-way degassing valve', icon: 'Package' },
         { value: 'JAR', label: 'Jar / tin', sublabel: 'Rigid resealable container', icon: 'Cookie' },
         { value: 'SACHET', label: 'Sachet / single-serve', icon: 'Ticket' },

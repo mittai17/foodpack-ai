@@ -10,12 +10,12 @@
  */
 
 export const BRAND_NAMES: Record<string, string> = {
-  en: 'FoodPack AI',
-  ta: 'ஃபுட்பேக் AI',
-  hi: 'फूडपैक AI',
-  te: 'ఫుడ్‌ప్యాక్ AI',
-  ml: 'ഫുഡ്പാക്ക് AI',
-  kn: 'ಫುಡ್‌ಪ್ಯಾಕ್ AI',
+  en: 'NutriWrap',
+  ta: 'நியூட்ரிவ்ராப்',
+  hi: 'न्यूट्रीरैप',
+  te: 'న్యూట్రివ్రాప్',
+  ml: 'ന്യൂട്രിറാപ്പ്',
+  kn: 'ನ್ಯೂಟ್ರಿವ್ರ್ಯಾಪ್',
 };
 
 export const FOOD_TRANSLATIONS: Record<string, Record<string, string>> = {

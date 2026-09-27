@@ -5,7 +5,19 @@ import {
   STORAGE_TYPES,
   TRANSPORT_TYPES,
   PACKAGING_FORMATS,
+  ENVIRONMENTAL_DATA_SOURCES,
 } from './enums';
+
+export const iotReadingsSchema = z.object({
+  deviceId: z.string().optional(),
+  temperatureC: z.number().optional(),
+  relativeHumidityPercent: z.number().optional(),
+  co2Ppm: z.number().optional(),
+  o2Percent: z.number().optional(),
+  respirationRateMlCo2PerKgPerHr: z.number().optional(),
+  timestamp: z.string().optional(),
+});
+export type IotReadings = z.infer<typeof iotReadingsSchema>;
 
 export const advancedInputsSchema = z
   .object({
@@ -18,6 +30,8 @@ export const advancedInputsSchema = z
     relativeHumidityPercent: z.number().min(0).max(100).optional(),
     measuredOtr: z.number().min(0).optional(),
     measuredWvtr: z.number().min(0).optional(),
+    environmentalDataSource: z.enum(ENVIRONMENTAL_DATA_SOURCES).optional(),
+    iotReadings: iotReadingsSchema.optional(),
     notes: z.string().max(1000).optional(),
   })
   .partial();
@@ -33,6 +47,7 @@ export const createAnalysisSchema = z.object({
   packageWeightKg: z.number().min(0.1).max(25000),
   objective: z.enum(OBJECTIVES),
   packagingFormat: z.enum(PACKAGING_FORMATS).optional(),
+  environmentalDataSource: z.enum(ENVIRONMENTAL_DATA_SOURCES).optional(),
   projectId: z.string().optional(),
   advancedMode: z.boolean().default(false),
   advancedInputs: advancedInputsSchema.optional(),

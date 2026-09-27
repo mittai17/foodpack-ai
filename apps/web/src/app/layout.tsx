@@ -17,11 +17,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'FoodPack AI — Better Packaging for a Healthier Tomorrow',
-    template: '%s · FoodPack AI',
+    default: 'NutriWrap — Smart Food Packaging & Shelf-Life Platform',
+    template: '%s · NutriWrap',
   },
   description:
-    'AI-assisted, science-backed packaging material recommendations for food commodities.',
+    'AI-assisted, science-backed packaging material recommendations and shelf-life prediction platform for food commodities.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/logo-icon.png', sizes: '256x256', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {

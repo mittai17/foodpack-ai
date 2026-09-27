@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Leaf } from 'lucide-react';
+import { BrandLogo } from './brand-logo';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from './nav-items';
@@ -15,16 +15,13 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2.5 px-5 pt-6 pb-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <Leaf className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="text-[15px] font-semibold leading-tight tracking-tight">{ts('brandName')}</p>
-          <p className="text-[11px] leading-tight text-muted-foreground">
+      <div className="px-5 pt-6 pb-5">
+        <Link href="/dashboard" onClick={onNavigate} className="group flex flex-col gap-1.5 focus:outline-none">
+          <BrandLogo height={34} priority />
+          <p className="text-[11px] font-medium leading-tight text-muted-foreground tracking-tight">
             {ts('tagline')}
           </p>
-        </div>
+        </Link>
       </div>
 
       <nav className="flex-1 space-y-1 px-3">

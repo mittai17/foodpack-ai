@@ -17,11 +17,13 @@ import {
   STORAGE_TYPES,
   TRANSPORT_TYPES,
   PACKAGING_FORMATS,
+  ENVIRONMENTAL_DATA_SOURCES,
   type ObjectiveType,
   type ProductState,
   type StorageType,
   type TransportType,
   type PackagingFormat,
+  type EnvironmentalDataSource,
 } from '@foodpack/shared';
 
 export class AdvancedInputsDto {
@@ -81,6 +83,11 @@ export class AdvancedInputsDto {
   @IsNumber()
   measuredWvtr?: number;
 
+  @ApiPropertyOptional({ enum: ENVIRONMENTAL_DATA_SOURCES })
+  @IsOptional()
+  @IsEnum(ENVIRONMENTAL_DATA_SOURCES)
+  environmentalDataSource?: EnvironmentalDataSource;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -123,6 +130,11 @@ export class CreateAnalysisDto {
   @ApiProperty({ enum: OBJECTIVES })
   @IsEnum(OBJECTIVES)
   objective!: ObjectiveType;
+
+  @ApiPropertyOptional({ enum: ENVIRONMENTAL_DATA_SOURCES })
+  @IsOptional()
+  @IsEnum(ENVIRONMENTAL_DATA_SOURCES)
+  environmentalDataSource?: EnvironmentalDataSource;
 
   @ApiPropertyOptional()
   @IsOptional()

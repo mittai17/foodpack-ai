@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { SidebarNav } from './sidebar-nav';
+import { BrandLogo } from './brand-logo';
 
 export function Topbar() {
   const router = useRouter();
@@ -37,6 +38,10 @@ export function Topbar() {
           <SidebarNav />
         </SheetContent>
       </Sheet>
+
+      <div className="flex items-center md:hidden">
+        <BrandLogo height={26} />
+      </div>
 
       <div className="relative hidden w-full max-w-md sm:block">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

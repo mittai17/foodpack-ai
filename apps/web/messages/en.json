@@ -21,6 +21,7 @@
   "navigation": {
     "dashboard": "Dashboard",
     "newAnalysis": "New Analysis",
+    "iotSensors": "IoT Sensors",
     "myProjects": "My Projects",
     "foodDatabase": "Food Database",
     "packagingMaterials": "Packaging Materials",
@@ -33,7 +34,7 @@
     "tagline": "Smarter Packaging, Healthier Food",
     "sustainablePackaging": "Sustainable Packaging",
     "betterTomorrow": "for a Better Tomorrow",
-    "brandName": "FoodPack AI"
+    "brandName": "NutriWrap"
   },
   "topbar": {
     "searchPlaceholder": "Search food (e.g., mango, rice, tomato…)",
@@ -71,7 +72,7 @@
     "pageSubtitle": "Choose the right module for your food product. The two modules use different scientific models — selecting the correct one gives you more accurate results.",
     "freshProduceTitle": "Fresh Fruits & Vegetables",
     "freshProduceSubtitle": "For fresh, living produce with active respiration",
-    "freshProduceDesc": "Uses the FoodPack Fresh Produce Engine — accounts for respiration rates, ethylene sensitivity, ripening, and modified atmosphere packaging to extend shelf life.",
+    "freshProduceDesc": "Uses the NutriWrap Fresh Produce Engine — accounts for respiration rates, ethylene sensitivity, ripening, and modified atmosphere packaging to extend shelf life.",
     "freshProduceExamplesLabel": "Examples:",
     "freshProduceCapabilities": "What this module analyses:",
     "otherCommoditiesTitle": "Other Food Commodities",
@@ -156,7 +157,39 @@
     "analysisFailed": "Analysis failed",
     "analysisComplete": "Analysis complete",
     "viewResults": "View Results",
-    "days": "days"
+    "days": "days",
+    "whatAreYouPackaging": "What are you packaging?",
+    "freshProducePrompt": "Select fresh produce from the catalog or upload a photo to auto-detect.",
+    "otherCommodityPrompt": "Select a food commodity from the catalog or upload a photo to auto-detect.",
+    "selectCatalog": "Select Catalog",
+    "uploadPhoto": "Upload Photo",
+    "orUploadImage": "Or upload food image instead",
+    "preferCatalog": "Prefer selecting manually from the list?",
+    "switchToCatalog": "Switch to Catalog Grid →",
+    "commodityReady": "Commodity ready · Click Next to configure requirements",
+    "selectToContinue": "Select or upload a food commodity to continue",
+    "uploadTitle": "Upload or drop a photo of your food commodity",
+    "uploadDesc": "NutriWrap Vision AI identifies the commodity and automatically configures its physiological respiration and barrier limits.",
+    "choosePhoto": "Choose photo or take picture",
+    "supportFormats": "Supports JPG, PNG, WEBP up to 10 MB",
+    "scanningTitle": "Scanning with NutriWrap Vision AI…",
+    "scanningDesc": "Analyzing visual morphology, spectral pigments, and fresh produce taxonomy",
+    "identifiedMatch": "Identified · {confidence}% Match",
+    "changeFood": "Change Food",
+    "remove": "Remove",
+    "overrideHelp": "Select correct commodity if identification was different:",
+    "attachedPhoto": "Attached Food Photo",
+    "attachedPhotoDesc": "Uploaded produce image attached for visual morphology & packaging record",
+    "freshEngineBadge": "Fresh Produce Engine",
+    "generalEngineBadge": "General Food Engine",
+    "selectedBadge": "Selected",
+    "viaPhotoBadge": "Via Photo",
+    "photoBadge": "Photo",
+    "searchPlaceholderFresh": "Search fresh produce (e.g. mango, tomato, apple, carrot…)",
+    "searchPlaceholderOther": "Search food commodities (e.g. rice, milk, coffee, biscuits…)",
+    "noProduceFound": "No commodities found in this module.",
+    "verifiedReason": "Manually verified by user",
+    "morphologyReason": "Visual morphology & spectral signature match"
   },
   "settings": {
     "title": "Settings",
@@ -312,7 +345,7 @@
     },
     "privacy": {
       "title": "Data Privacy",
-      "subtitle": "Control what data FoodPack AI collects and uses.",
+      "subtitle": "Control what data NutriWrap collects and uses.",
       "analytics": "Usage Analytics",
       "analyticsDesc": "Help us improve by sharing anonymous usage data",
       "crashReports": "Crash Reports",
@@ -424,7 +457,7 @@
       },
       "monoMaterial": {
         "term": "Mono-material construction",
-        "definition": "A package built from a single material (rather than a multilayer laminate) is much easier to recycle — a smaller number of distinct materials is one of the sustainability signals FoodPack AI scores."
+        "definition": "A package built from a single material (rather than a multilayer laminate) is much easier to recycle — a smaller number of distinct materials is one of the sustainability signals NutriWrap scores."
       },
       "waterActivity": {
         "term": "Water activity (aw)",
@@ -449,7 +482,7 @@
     "home": {
       "badge": "SIH 2026 · Problem Statement 26236",
       "title": "Better Packaging for a Healthier Tomorrow",
-      "subtitle": "FoodPack AI recommends food packaging materials and structures using a validated knowledge base and a deterministic scientific engine — with technical specs, cost, and sustainability insight, explained in plain language.",
+      "subtitle": "NutriWrap recommends food packaging materials and structures using a validated knowledge base and a deterministic scientific engine — with technical specs, cost, and sustainability insight, explained in plain language.",
       "startAnalysis": "Start New Analysis",
       "seeHowItWorks": "See how it works",
       "trustedBy": "Trusted by food scientists and packaging engineers",
@@ -460,7 +493,7 @@
       "step2Desc": "Storage, target shelf life, transport distance, and what matters most — no technical jargon required.",
       "step3Title": "Get a scientific recommendation",
       "step3Desc": "A deterministic rule engine — not a guessing chatbot — scores real packaging options against your requirements.",
-      "whyFoodpackTitle": "Why FoodPack AI",
+      "whyNutriwrapTitle": "Why NutriWrap",
       "explainableTitle": "Explainable, not a black box",
       "explainableDesc": "Every recommendation shows the scoring breakdown and the \"why\" behind it — barrier fit, cost, sustainability.",
       "citedTitle": "Built on cited sources",
@@ -480,7 +513,7 @@
     },
     "footer": {
       "tagline": "Science-backed packaging for a healthier tomorrow.",
-      "copyright": "© 2026 FoodPack AI. All rights reserved."
+      "copyright": "© 2026 NutriWrap. All rights reserved."
     }
   },
   "comingSoon": {
@@ -495,16 +528,16 @@
     "invalidLocale": "Invalid language selected."
   },
   "about": {
-    "pageTitle": "About FoodPack AI",
-    "statement": "FoodPack AI is built for Smart India Hackathon problem statement {psNumber} — {psTitle}, proposed by the Ministry of Food Processing Industries (MoFPI).",
+    "pageTitle": "About NutriWrap",
+    "statement": "NutriWrap is built for Smart India Hackathon problem statement {psNumber} — {psTitle}, proposed by the Ministry of Food Processing Industries (MoFPI).",
     "psTitle": "AI-Based Intelligent Food Packaging Material Recommendation System for Food Commodities",
     "improperPackaging": "Improper packaging leads to moisture absorption, oxidation, microbial spoilage, and nutrient loss — and packaging material selection today depends heavily on expert knowledge that small food businesses, farmers, and startups often don't have easy access to.",
-    "translationsExplanation": "FoodPack AI translates simple, non-technical questions about a food commodity into the barrier, mechanical, and gas-exchange requirements that actually determine which packaging material and structure will work — using a validated knowledge base and a deterministic scoring engine, with an AI model used only to explain the result in plain language.",
+    "translationsExplanation": "NutriWrap translates simple, non-technical questions about a food commodity into the barrier, mechanical, and gas-exchange requirements that actually determine which packaging material and structure will work — using a validated knowledge base and a deterministic scoring engine, with an AI model used only to explain the result in plain language.",
     "decisionSupportNotice": "It is designed as a decision-support tool to assist industries, farmers, startups, and researchers — not a replacement for experimental validation before commercial production."
   },
   "features": {
     "pageTitle": "Features",
-    "pageSubtitle": "FoodPack AI is a decision-support platform, not a chatbot. Here is what actually powers a recommendation today, and what is coming next.",
+    "pageSubtitle": "NutriWrap is a decision-support platform, not a chatbot. Here is what actually powers a recommendation today, and what is coming next.",
     "liveBadge": "Live",
     "roadmapBadge": "Roadmap",
     "f1Title": "Deterministic recommendation engine",
@@ -526,7 +559,7 @@
   },
   "howItWorks": {
     "pageTitle": "How it works",
-    "pageSubtitle": "The critical design decision behind FoodPack AI: the AI model never invents the recommendation. It only explains one that a deterministic pipeline already computed.",
+    "pageSubtitle": "The critical design decision behind NutriWrap: the AI model never invents the recommendation. It only explains one that a deterministic pipeline already computed.",
     "pipeline": {
       "userInput": "User input",
       "knowledgeBase": "Food knowledge base",

@@ -19,15 +19,18 @@ import { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   AlertTriangle,
+  Camera,
   ChevronDown,
   ChevronUp,
   FlaskConical,
   Info,
+  LayoutGrid,
   Leaf,
   Loader2,
   Search,
   Sparkles,
   Thermometer,
+  UploadCloud,
   Wind,
 } from 'lucide-react';
 import {
@@ -51,9 +54,12 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Stepper } from '@/components/wizard/stepper';
 import { QuestionBlock } from '@/components/wizard/question-block';
+import { FoodImageUploader } from '@/components/wizard/food-image-uploader';
 import { useFood, useFoods } from '@/hooks/use-foods';
 import { useCreateAnalysis } from '@/hooks/use-analysis';
+import { useTranslations, useLocale } from 'next-intl';
 import { getFoodEmoji } from '@/lib/food-icons';
+import { getFoodName, getCategoryName } from '@/lib/i18n-helpers';
 import { CategoryPills } from '@/components/food/category-pills';
 import { resolveTemplate } from '@/lib/questionnaire/templates';
 import type { WizardField } from '@/lib/questionnaire/types';
@@ -242,10 +248,21 @@ function ReviewItem({ label, value }: { label: string; value: string }) {
 export function AnalysisWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const tw = useTranslations('wizard');
+  const tc = useTranslations('common');
+  const locale = useLocale();
   const [step, setStep] = useState(0);
+
+  const steps = [
+    { label: tw('steps.food'), description: tw('selectFoodPrompt') },
+    { label: tw('steps.storage'), description: tw('steps.requirements') },
+    { label: tw('steps.results'), description: tw('steps.results') },
+  ];
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<string | undefined>();
   const [foodId, setFoodId] = useState<string | undefined>();
+  const [selectionMode, setSelectionMode] = useState<'catalog' | 'upload'>('catalog');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | undefined>();
   const [wizState, setWizState] = useState<WizardState>(DEFAULT_STATE);
   const [advancedMode, setAdvancedMode] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -307,8 +324,14 @@ export function AnalysisWizard() {
   function buildReviewItems() {
     if (!template || !selectedFood) return [];
     const items: Array<{ label: string; value: string }> = [
-      { label: 'Food', value: selectedFood.name },
+      { label: tw('steps.food'), value: getFoodName(selectedFood, locale) },
     ];
+    if (uploadedImageUrl) {
+      items.push({
+        label: tw('attachedPhoto'),
+        value: tw('viaPhotoBadge'),
+      });
+    }
     for (const q of template.questions) {
       const raw = getValue(q.fieldKey);
       if (q.type === 'info_hint' || raw === '' || raw === null || raw === undefined) continue;
@@ -328,88 +351,188 @@ export function AnalysisWizard() {
       {/* Stepper */}
       <Card>
         <CardContent className="px-6 py-4">
-          <Stepper steps={STEPS} current={step} />
+          <Stepper steps={steps} current={step} />
         </CardContent>
       </Card>
 
       {/* ── STEP 0 — Food selection ─────────────────────────────────────────── */}
       {step === 0 && (
         <Card>
-          <CardContent className="space-y-5 px-6 py-6">
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight">What are you packaging?</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Select your food commodity — the questionnaire will adapt to it automatically.
-              </p>
-            </div>
+          <CardContent className="space-y-6 px-6 py-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">{tw('whatAreYouPackaging')}</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {tw('otherCommodityPrompt')}
+                </p>
+              </div>
 
-            <div className="relative max-w-md">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search (e.g. mango, rice, milk, chips…)"
-                className="pl-9"
-              />
-            </div>
-
-            <CategoryPills value={category} onChange={setCategory} />
-
-            {foodsLoading && (
-              <p className="text-sm text-muted-foreground">Loading commodities…</p>
-            )}
-
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-              {(foods?.items ?? []).map((food) => (
+              {/* Mode switch */}
+              <div className="inline-flex rounded-xl bg-secondary/80 p-1 border border-border/80 self-start sm:self-auto">
                 <button
-                  key={food.id}
                   type="button"
-                  onClick={() => {
-                    setFoodId(food.id);
-                    // Reset wizard state when food changes
-                    setWizState(DEFAULT_STATE);
-                  }}
+                  onClick={() => setSelectionMode('catalog')}
                   className={cn(
-                    'flex flex-col items-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors',
-                    effectiveFoodId === food.id
-                      ? 'border-primary bg-accent ring-1 ring-primary'
-                      : 'border-border bg-card hover:bg-secondary/40',
+                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
+                    selectionMode === 'catalog'
+                      ? 'bg-card text-foreground shadow-xs'
+                      : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-lg">
-                    {getFoodEmoji(food.slug, food.category.slug)}
-                  </span>
-                  <span className="text-xs font-medium leading-tight">{food.name}</span>
-                  <span className="text-[10px] text-muted-foreground">{food.category.name}</span>
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  {tw('selectCatalog')}
                 </button>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => setSelectionMode('upload')}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
+                    selectionMode === 'upload'
+                      ? 'bg-card text-foreground shadow-xs'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  <Camera className="h-3.5 w-3.5 text-emerald-600" />
+                  {tw('uploadPhoto')}
+                  <span className="rounded-full bg-emerald-100 px-1.5 py-0.2 text-[9px] font-bold text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300">
+                    AI
+                  </span>
+                </button>
+              </div>
             </div>
 
-            {!foodsLoading && (foods?.items.length ?? 0) === 0 && (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                No results for &ldquo;{search}&rdquo;.
-              </p>
+            {/* Mode 1: Upload Photo */}
+            {selectionMode === 'upload' && (
+              <div className="space-y-4">
+                <FoodImageUploader
+                  availableFoods={foods?.items ?? []}
+                  selectedFood={selectedFood}
+                  uploadedImageUrl={uploadedImageUrl}
+                  onFoodSelected={(food, imgUrl) => {
+                    setFoodId(food.id);
+                    setUploadedImageUrl(imgUrl);
+                    setWizState(DEFAULT_STATE);
+                  }}
+                  onClear={() => {
+                    setFoodId(undefined);
+                    setUploadedImageUrl(undefined);
+                  }}
+                />
+
+                <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
+                  <span>{tw('preferCatalog')}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectionMode('catalog')}
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {tw('switchToCatalog')}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Mode 2: Catalog Selection */}
+            {selectionMode === 'catalog' && (
+              <div className="space-y-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder={tw('searchPlaceholderOther')}
+                      className="pl-9"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectionMode('upload')}
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors self-start sm:self-auto"
+                  >
+                    <UploadCloud className="h-3.5 w-3.5" />
+                    {tw('orUploadImage')}
+                  </button>
+                </div>
+
+                <CategoryPills value={category} onChange={setCategory} />
+
+                {foodsLoading && (
+                  <p className="text-sm text-muted-foreground">{tc('loading')}</p>
+                )}
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                  {(foods?.items ?? []).map((food) => (
+                    <button
+                      key={food.id}
+                      type="button"
+                      onClick={() => {
+                        setFoodId(food.id);
+                        setWizState(DEFAULT_STATE);
+                      }}
+                      className={cn(
+                        'flex flex-col items-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors',
+                        effectiveFoodId === food.id
+                          ? 'border-primary bg-accent ring-1 ring-primary'
+                          : 'border-border bg-card hover:bg-secondary/40',
+                      )}
+                    >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-lg">
+                        {getFoodEmoji(food.slug, food.category.slug)}
+                      </span>
+                      <span className="text-xs font-medium leading-tight">{getFoodName(food, locale)}</span>
+                      <span className="text-[10px] text-muted-foreground">{getCategoryName(food.category, locale)}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {!foodsLoading && (foods?.items.length ?? 0) === 0 && (
+                  <p className="py-6 text-center text-sm text-muted-foreground">
+                    {tw('noProduceFound')}
+                  </p>
+                )}
+              </div>
             )}
 
             {/* Selected food preview */}
             {selectedFood && (
               <div className="flex items-center gap-3 rounded-xl border border-primary/30 bg-accent/60 px-4 py-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-card text-lg">
-                  {getFoodEmoji(selectedFood.slug, selectedFood.category.slug)}
-                </span>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold">{selectedFood.name}</p>
-                  <p className="text-xs text-muted-foreground">{selectedFood.category.name}</p>
+                {uploadedImageUrl ? (
+                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={uploadedImageUrl} alt={getFoodName(selectedFood, locale)} className="h-full w-full object-cover" />
+                  </div>
+                ) : (
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-card text-lg">
+                    {getFoodEmoji(selectedFood.slug, selectedFood.category.slug)}
+                  </span>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm font-semibold truncate">{getFoodName(selectedFood, locale)}</p>
+                    {uploadedImageUrl && (
+                      <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                        {tw('viaPhotoBadge')}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{getCategoryName(selectedFood.category, locale)}</p>
                 </div>
                 <Badge variant="secondary" className="shrink-0 text-xs">
-                  Selected
+                  {tw('selectedBadge')}
                 </Badge>
               </div>
             )}
 
-            <div className="flex justify-end pt-1">
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-muted-foreground">
+                {effectiveFoodId
+                  ? tw('commodityReady')
+                  : tw('selectToContinue')}
+              </span>
               <Button disabled={!effectiveFoodId} onClick={() => setStep(1)}>
-                Continue →
+                {tc('next')} →
               </Button>
             </div>
           </CardContent>
@@ -498,7 +621,7 @@ export function AnalysisWizard() {
                   <div className="mb-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-xs text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
                     <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                     <span>
-                      Leave fields blank to use <strong>Reference values</strong> from the FoodPack
+                      Leave fields blank to use <strong>Reference values</strong> from the NutriWrap
                       database. Only fill in values you have measured in a lab.
                     </span>
                   </div>
@@ -595,9 +718,24 @@ export function AnalysisWizard() {
             <div>
               <h2 className="text-lg font-semibold tracking-tight">Review your analysis</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Check the inputs below before FoodPack AI analyzes your packaging requirements.
+                Check the inputs below before NutriWrap analyzes your packaging requirements.
               </p>
             </div>
+
+            {uploadedImageUrl && (
+              <div className="flex items-center gap-3.5 rounded-xl border border-emerald-300/80 bg-emerald-50/60 p-3.5 dark:border-emerald-900/60 dark:bg-emerald-950/30">
+                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border shadow-xs bg-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={uploadedImageUrl} alt="Uploaded produce" className="h-full w-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-foreground">{tw('attachedPhoto')}</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {tw('attachedPhotoDesc')}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {buildReviewItems().map((item) => (
@@ -626,7 +764,7 @@ export function AnalysisWizard() {
             <div className="flex items-start gap-2 rounded-xl border border-dashed border-border px-4 py-3 text-xs text-muted-foreground">
               <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
               <span>
-                FoodPack AI uses validated reference data and a deterministic scoring model.
+                NutriWrap uses validated reference data and a deterministic scoring model.
                 Results are decision-support estimates — validate experimentally before commercial
                 production.
               </span>

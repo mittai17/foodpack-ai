@@ -76,3 +76,13 @@ export const PACKAGING_FORMAT_LABELS: Record<PackagingFormat, string> = {
   CLAMSHELL: 'Clamshell',
   JAR: 'Jar',
 };
+
+export const ENVIRONMENTAL_DATA_SOURCES = ['REFERENCE', 'IOT', 'BOTH'] as const;
+export type EnvironmentalDataSource = (typeof ENVIRONMENTAL_DATA_SOURCES)[number];
+
+export const ENVIRONMENTAL_DATA_SOURCE_LABELS: Record<EnvironmentalDataSource, string> = {
+  REFERENCE: 'Reference conditions',
+  IOT: 'Live IoT monitoring',
+  BOTH: 'Both',
+};
+
