@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,20 +10,21 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useFood } from '@/hooks/use-foods';
 import { formatValue } from '@/lib/format-value';
 import { getFoodEmoji } from '@/lib/food-icons';
-import { STORAGE_LABELS } from '@foodpack/shared';
-
-const PROPERTY_LABELS: Record<string, string> = {
-  MOISTURE_CONTENT: 'Moisture content',
-  PH: 'pH',
-  FAT_CONTENT: 'Fat / oil content',
-  WATER_ACTIVITY: 'Water activity',
-};
+import {
+  getFoodName,
+  getCategoryName,
+  getPropertyName,
+  getConfidenceLabel,
+  getStorageLabel,
+} from '@/lib/i18n-helpers';
 
 export function FoodDetail({ slug }: { slug: string }) {
   const { data: food, isLoading } = useFood(slug);
+  const locale = useLocale();
+  const t = useTranslations('foods');
 
   if (isLoading) return <Skeleton className="h-96 w-full" />;
-  if (!food) return <p className="text-sm text-muted-foreground">Food not found.</p>;
+  if (!food) return <p className="text-sm text-muted-foreground">{t('foodNotFound')}</p>;
 
   return (
     <div className="space-y-6">
@@ -32,13 +34,13 @@ export function FoodDetail({ slug }: { slug: string }) {
             {getFoodEmoji(food.slug, food.category.slug)}
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">{food.category.name}</p>
-            <h1 className="text-2xl font-semibold tracking-tight">{food.name}</h1>
+            <p className="text-xs text-muted-foreground">{getCategoryName(food.category, locale)}</p>
+            <h1 className="text-2xl font-semibold tracking-tight">{getFoodName(food, locale)}</h1>
             {food.scientificName && (
               <p className="text-sm italic text-muted-foreground">{food.scientificName}</p>
             )}
             {food.commonNames.length > 0 && (
-              <p className="text-xs text-muted-foreground">Also known as: {food.commonNames.join(', ')}</p>
+              <p className="text-xs text-muted-foreground">{t('alsoKnownAs')}: {food.commonNames.join(', ')}</p>
             )}
           </div>
         </div>
@@ -46,7 +48,7 @@ export function FoodDetail({ slug }: { slug: string }) {
           nativeButton={false}
           render={
             <Link href={`/analysis/new?food=${food.slug}`}>
-              Analyze packaging for {food.name}
+              {t('analyzePackagingFor', { name: getFoodName(food, locale) })}
               <ArrowRight className="h-4 w-4" />
             </Link>
           }
@@ -57,23 +59,23 @@ export function FoodDetail({ slug }: { slug: string }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Properties</CardTitle>
+          <CardTitle>{t('properties')}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
           {food.properties.length === 0 && (
-            <p className="text-sm text-muted-foreground">Insufficient validated data.</p>
+            <p className="text-sm text-muted-foreground">{t('insufficientData')}</p>
           )}
           {food.properties.map((p, i) => (
             <div key={i} className="rounded-lg border border-border px-3 py-2">
               <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                {PROPERTY_LABELS[p.propertyType] ?? p.propertyType}
+                {getPropertyName(p.propertyType, locale)}
               </p>
               <p className="text-sm font-medium">
                 {formatValue(p)}{' '}
                 {p.unit}
               </p>
               <Badge variant="outline" className="mt-1">
-                {p.confidence} confidence
+                {getConfidenceLabel(p.confidence, locale)} {t('confidence')}
               </Badge>
             </div>
           ))}
@@ -82,12 +84,12 @@ export function FoodDetail({ slug }: { slug: string }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Storage conditions</CardTitle>
+          <CardTitle>{t('storageConditions')}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2">
           {food.storageConditions.map((s, i) => (
             <div key={i} className="rounded-lg border border-border px-3 py-2">
-              <p className="text-sm font-medium">{STORAGE_LABELS[s.storageType]}</p>
+              <p className="text-sm font-medium">{getStorageLabel(s.storageType, locale)}</p>
               <p className="text-xs text-muted-foreground">
                 {s.minTempC ?? '—'}–{s.maxTempC ?? '—'}°C
                 {(s.minRH || s.maxRH) && ` · ${s.minRH ?? '—'}–${s.maxRH ?? '—'}% RH`}
@@ -100,14 +102,14 @@ export function FoodDetail({ slug }: { slug: string }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Shelf-life reference</CardTitle>
+          <CardTitle>{t('shelfLifeReference')}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-2">
           {food.shelfLifeData.map((s, i) => (
             <div key={i} className="rounded-lg border border-border px-3 py-2">
-              <p className="text-sm font-medium">{STORAGE_LABELS[s.storageType]}</p>
+              <p className="text-sm font-medium">{getStorageLabel(s.storageType, locale)}</p>
               <p className="text-xs text-muted-foreground">
-                {s.minDays ?? '—'}–{s.maxDays ?? '—'} days · {s.packagingContext}
+                {s.minDays ?? '—'}–{s.maxDays ?? '—'} {t('days')} · {s.packagingContext}
               </p>
             </div>
           ))}
@@ -117,7 +119,7 @@ export function FoodDetail({ slug }: { slug: string }) {
       {food.sources.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Sources</CardTitle>
+            <CardTitle>{t('sources')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {food.sources.map((s) => (
@@ -134,3 +136,4 @@ export function FoodDetail({ slug }: { slug: string }) {
     </div>
   );
 }
+

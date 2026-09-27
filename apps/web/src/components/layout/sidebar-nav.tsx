@@ -3,12 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Leaf } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from './nav-items';
 import { HillsIllustration } from './hills-illustration';
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const t = useTranslations('navigation');
+  const ts = useTranslations('sidebar');
 
   return (
     <div className="flex h-full flex-col">
@@ -17,9 +20,9 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
           <Leaf className="h-5 w-5" />
         </div>
         <div>
-          <p className="text-[15px] font-semibold leading-tight tracking-tight">FoodPack AI</p>
+          <p className="text-[15px] font-semibold leading-tight tracking-tight">{ts('brandName')}</p>
           <p className="text-[11px] leading-tight text-muted-foreground">
-            Smarter Packaging, Healthier Food
+            {ts('tagline')}
           </p>
         </div>
       </div>
@@ -42,7 +45,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              {item.label}
+              {t(item.translationKey)}
             </Link>
           );
         })}
@@ -51,9 +54,9 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       <div className="relative mt-6 overflow-hidden rounded-t-2xl">
         <div className="relative z-10 px-5 pb-4 pt-5">
           <p className="text-sm font-semibold text-sidebar-accent-foreground">
-            Sustainable Packaging
+            {ts('sustainablePackaging')}
           </p>
-          <p className="text-xs text-muted-foreground">for a Better Tomorrow</p>
+          <p className="text-xs text-muted-foreground">{ts('betterTomorrow')}</p>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0">
           <HillsIllustration />

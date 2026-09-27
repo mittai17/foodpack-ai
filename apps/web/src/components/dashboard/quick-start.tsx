@@ -26,6 +26,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLocale } from 'next-intl';
+import { getFoodName } from '@/lib/i18n-helpers';
 import { useFoods } from '@/hooks/use-foods';
 import { useCreateAnalysis } from '@/hooks/use-analysis';
 import { toast } from 'sonner';
@@ -48,6 +50,7 @@ const PACKAGE_WEIGHT_PRESETS = [
 
 export function QuickStart() {
   const router = useRouter();
+  const locale = useLocale();
   const { data: foods } = useFoods();
   const createAnalysis = useCreateAnalysis();
 
@@ -113,13 +116,16 @@ export function QuickStart() {
           <Select value={foodId ?? undefined} onValueChange={setFoodId}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a food">
-                {(v: string | undefined) => foods?.items.find((f) => f.id === v)?.name ?? 'Select a food'}
+                {(v: string | undefined) => {
+                  const found = foods?.items.find((f) => f.id === v);
+                  return found ? getFoodName(found, locale) : 'Select a food';
+                }}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {(foods?.items ?? []).map((food) => (
                 <SelectItem key={food.id} value={food.id}>
-                  {food.name}
+                  {getFoodName(food, locale)}
                 </SelectItem>
               ))}
             </SelectContent>

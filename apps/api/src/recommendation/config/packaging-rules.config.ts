@@ -36,8 +36,10 @@ export const OTR_BANDS = {
   /** Fat/oil-bearing foods are oxidation-sensitive and need a strong O2
    * barrier. */
   OXIDATION_SENSITIVE_LOW_OTR: { min: 0, max: 5 } as Band,
-  /** General dry / ambient-shelf-stable goods. */
-  GENERAL_DRY_GOODS: { min: 0, max: 50 } as Band,
+  /** General dry / ambient-shelf-stable goods (grains, pulses, bakery, low-fat goods)
+   * where oxidation is not the primary deterioration route and standard poly films
+   * (LDPE/PP/HDPE up to 8000 cc/m²/day) are the global industry standard packaging. */
+  GENERAL_DRY_GOODS: { min: 0, max: 8000 } as Band,
 } as const;
 
 /**
@@ -47,17 +49,12 @@ export const OTR_BANDS = {
  * fallback band above. A more actively respiring commodity consumes O2
  * faster, so the pack needs proportionally more O2 transmission to avoid
  * anaerobic respiration/off-flavors; a slowly respiring commodity can use a
- * tighter barrier that still slows senescence.
- *
- * Thresholds follow Kader, A.A. (ed.), Postharvest Technology of
- * Horticultural Crops, 3rd ed., UC ANR Pub. 3311 — respiration-rate
- * classification (mL CO2/kg/hr at ~5-10C): very low <5, low 5-10,
- * moderate 10-20, high 20-40, very high >40.
+ * breathable poly film (LDPE/PP) that still slows senescence.
  */
 export const RESPIRATION_OTR_BANDS = {
-  VERY_LOW_OR_LOW: { min: 1000, max: 3000 } as Band, // <10 mL CO2/kg/hr
-  MODERATE: { min: 3000, max: 5000 } as Band, // 10-20 mL CO2/kg/hr
-  HIGH_OR_VERY_HIGH: { min: 5000, max: 8000 } as Band, // >20 mL CO2/kg/hr
+  VERY_LOW_OR_LOW: { min: 1000, max: 8000 } as Band, // <10 mL CO2/kg/hr (apples, potatoes, onions)
+  MODERATE: { min: 2500, max: 10000 } as Band, // 10-20 mL CO2/kg/hr (carrots, tomatoes)
+  HIGH_OR_VERY_HIGH: { min: 5000, max: 15000 } as Band, // >20 mL CO2/kg/hr (leafy greens, mushrooms)
 } as const;
 
 export const RESPIRATION_RATE_THRESHOLDS = {

@@ -10,6 +10,7 @@ import {
   ChevronDown,
   Droplet,
   FileText,
+  Gauge,
   Loader2,
   Package,
   Ruler,
@@ -29,16 +30,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CircularScore } from '@/components/ui/circular-score';
 import { useAnalysis } from '@/hooks/use-analysis';
-import type { RecommendationCandidate, SourceRef } from '@/lib/api/types';
+import type { RecommendationCandidate, RequirementSummary, SourceRef } from '@/lib/api/types';
 import { formatValue } from '@/lib/format-value';
 import { getFoodEmoji } from '@/lib/food-icons';
 import { cn } from '@/lib/utils';
+import { useLocale } from 'next-intl';
+import { getFoodName, getStorageLabel } from '@/lib/i18n-helpers';
 import { PackagingViewer3D } from '@/components/three/packaging-viewer-loader';
 import { PackageIllustration } from '@/components/packaging/package-illustration';
 import { colorForMaterial } from '@/lib/package-visuals';
-import { findMinProperty } from './property-helpers';
+import { findMaxProperty, findMinProperty } from './property-helpers';
 import { EnvironmentalConditionsCard } from './components/environmental-conditions-card';
-import { TechnicalSpecsCard } from './components/technical-specs-card';
 import { AlternativesGrid } from './components/alternatives-grid';
 import { SaveProjectDialog } from './components/save-project-dialog';
 
@@ -60,6 +62,7 @@ const LAYER_PURPOSE: Record<string, string> = {
 
 export function AnalysisResult({ id }: { id: string }) {
   const { data: analysis, isLoading, error } = useAnalysis(id);
+  const locale = useLocale();
 
   if (isLoading) {
     return (
@@ -97,7 +100,7 @@ export function AnalysisResult({ id }: { id: string }) {
   }
 
   if (analysis.status !== 'COMPLETED') {
-    return <AnalysisProgressCard foodName={analysis.food.name} />;
+    return <AnalysisProgressCard foodName={getFoodName(analysis.food, locale)} />;
   }
 
   const recommended = analysis.recommendations.find((r) => r.isRecommended);
@@ -114,9 +117,9 @@ export function AnalysisResult({ id }: { id: string }) {
             <SummaryChip
               emoji={getFoodEmoji(analysis.food.slug, analysis.food.category.slug)}
               label="Food"
-              value={analysis.food.name}
+              value={getFoodName(analysis.food, locale)}
             />
-            <SummaryChip icon={Thermometer} label="Storage" value={STORAGE_LABELS[analysis.storageType]} />
+            <SummaryChip icon={Thermometer} label="Storage" value={getStorageLabel(analysis.storageType, locale)} />
             <SummaryChip icon={Calendar} label="Target" value={`${analysis.targetShelfLifeDays} days`} />
             <SummaryChip
               icon={Package}
@@ -144,18 +147,17 @@ export function AnalysisResult({ id }: { id: string }) {
         <>
           <RecommendedCard
             recommendation={recommended}
-            foodName={analysis.food.name}
+            foodName={getFoodName(analysis.food, locale)}
             packageWeightKg={analysis.packageWeightKg}
             mapRecommended={analysis.requirement?.mapRecommended ?? false}
           />
-          <WhySection recommendation={recommended} />
+          <WhyAndSpecsSection recommendation={recommended} requirement={analysis.requirement} />
           <EnvironmentalConditionsCard
             food={analysis.food}
             storageType={analysis.storageType}
             requirement={analysis.requirement}
             shelfLifeConfidence={recommended.shelfLifeConfidence}
           />
-          <TechnicalSpecsCard structure={recommended.structure} requirement={analysis.requirement} />
         </>
       )}
 
@@ -436,29 +438,145 @@ function SpecTile({
   );
 }
 
-function WhySection({ recommendation }: { recommendation: RecommendationCandidate }) {
+function WhyAndSpecsSection({
+  recommendation,
+  requirement,
+}: {
+  recommendation: RecommendationCandidate;
+  requirement: RequirementSummary | null;
+}) {
+  const structure = recommendation.structure;
+  const otr = structure ? findMinProperty(structure.layers, 'OTR') : null;
+  const wvtr = structure ? findMinProperty(structure.layers, 'WVTR') : null;
+  const tensile = structure ? findMaxProperty(structure.layers, 'TENSILE_STRENGTH') : null;
+  const puncture = structure ? findMaxProperty(structure.layers, 'PUNCTURE_RESISTANCE') : null;
+  const seal = structure ? findMaxProperty(structure.layers, 'SEAL_STRENGTH') : null;
+  const materialComposition = structure
+    ? Array.from(new Set(structure.layers.map((l) => l.material.materialType))).join(' / ')
+    : '—';
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Why this packaging?</CardTitle>
+        <CardTitle className="text-xl">Why this packaging? &amp; Technical Specifications</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         {recommendation.aiExplanation && (
-          <p className="rounded-lg bg-accent px-4 py-3 text-sm text-accent-foreground">
-            {recommendation.aiExplanation}
-          </p>
+          <div className="flex items-start gap-3 rounded-xl bg-accent/60 p-4 text-sm text-accent-foreground border border-accent">
+            <Sparkles className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+            <p className="leading-relaxed">{recommendation.aiExplanation}</p>
+          </div>
         )}
+
         <ul className="space-y-2">
           {recommendation.explanation.map((line, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm">
+            <li key={i} className="flex items-start gap-2.5 text-sm">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span className="text-muted-foreground">{line}</span>
+              <span className="text-foreground">{line}</span>
             </li>
           ))}
         </ul>
-        <ScoreBreakdown breakdown={recommendation.scoreBreakdown} />
+
+        <div className="grid grid-cols-1 gap-8 pt-4 border-t border-border lg:grid-cols-2">
+          {/* Left Column: Decision Breakdown & Performance Scores */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Gauge className="h-4 w-4 text-primary" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Performance Score Breakdown
+              </h3>
+            </div>
+            <ScoreBreakdown breakdown={recommendation.scoreBreakdown} />
+          </div>
+
+          {/* Right Column: Technical Specifications */}
+          {structure && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Box className="h-4 w-4 text-primary" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Technical Specifications
+                </h3>
+              </div>
+
+              <div className="space-y-3">
+                <SpecGroup title="Packaging structure">
+                  <SpecRow label="Structure type" value={structure.structureType} />
+                  <SpecRow label="Material composition" value={materialComposition || '—'} />
+                  <SpecRow label="Layer count" value={String(structure.layers.length)} />
+                </SpecGroup>
+
+                <SpecGroup title="Barrier properties">
+                  <SpecRow
+                    label="OTR (oxygen)"
+                    value={otr ? `${formatValue(otr)} ${otr.unit ?? ''}` : 'Insufficient validated data'}
+                  />
+                  <SpecRow
+                    label="WVTR (moisture)"
+                    value={wvtr ? `${formatValue(wvtr)} ${wvtr.unit ?? ''}` : 'Insufficient validated data'}
+                  />
+                </SpecGroup>
+
+                <SpecGroup title="Mechanical properties">
+                  <SpecRow
+                    label="Tensile strength"
+                    value={tensile ? `${formatValue(tensile)} ${tensile.unit ?? ''}` : 'Insufficient validated data'}
+                  />
+                  <SpecRow
+                    label="Puncture resistance"
+                    value={puncture ? `${formatValue(puncture)} ${puncture.unit ?? ''}` : 'Insufficient validated data'}
+                  />
+                  <SpecRow
+                    label="Seal strength"
+                    value={seal ? `${formatValue(seal)} ${seal.unit ?? ''}` : 'Insufficient validated data'}
+                  />
+                </SpecGroup>
+
+                {requirement && (
+                  <SpecGroup title="MAP parameters (fresh produce)">
+                    <SpecRow label="Recommended" value={requirement.mapRecommended ? 'Yes' : 'No'} />
+                    <SpecRow
+                      label="Target O₂"
+                      value={
+                        requirement.recommendedO2Min !== null && requirement.recommendedO2Min !== undefined
+                          ? `${requirement.recommendedO2Min}–${requirement.recommendedO2Max}%`
+                          : 'Insufficient validated data'
+                      }
+                    />
+                    <SpecRow
+                      label="Target CO₂"
+                      value={
+                        requirement.recommendedCo2Min !== null && requirement.recommendedCo2Min !== undefined
+                          ? `${requirement.recommendedCo2Min}–${requirement.recommendedCo2Max}%`
+                          : 'Insufficient validated data'
+                      }
+                    />
+                  </SpecGroup>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
+  );
+}
+
+function SpecGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{title}</p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{children}</div>
+    </div>
+  );
+}
+
+function SpecRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-secondary/20 px-3 py-2">
+      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="text-xs font-semibold mt-0.5 truncate">{value}</p>
+    </div>
   );
 }
 
@@ -475,14 +593,20 @@ function ScoreBreakdown({ breakdown }: { breakdown: Record<string, number> }) {
   };
 
   return (
-    <div className="space-y-2 pt-2">
+    <div className="space-y-2.5">
       {Object.entries(breakdown).map(([key, value]) => (
         <div key={key} className="flex items-center gap-3 text-xs">
-          <span className="w-36 shrink-0 text-muted-foreground">{labels[key] ?? key}</span>
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary" style={{ width: `${value}%` }} />
+          <span className="w-44 shrink-0 text-muted-foreground font-medium">{labels[key] ?? key}</span>
+          <div className="h-2 flex-1 overflow-hidden rounded-full bg-secondary">
+            <div
+              className={cn(
+                'h-full rounded-full transition-all duration-500',
+                value >= 80 ? 'bg-primary' : value >= 50 ? 'bg-amber-500' : 'bg-rose-500'
+              )}
+              style={{ width: `${Math.max(value, 3)}%` }}
+            />
           </div>
-          <span className="w-8 shrink-0 text-right font-medium">{Math.round(value)}</span>
+          <span className="w-8 shrink-0 text-right font-semibold">{Math.round(value)}</span>
         </div>
       ))}
     </div>

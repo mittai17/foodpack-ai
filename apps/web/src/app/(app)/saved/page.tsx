@@ -1,20 +1,24 @@
 import { Bookmark } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { ComingSoon } from '@/components/layout/coming-soon';
 
 export const metadata = { title: 'Saved' };
 
-export default function SavedPage() {
+export default async function SavedPage() {
+  const t = await getTranslations('saved');
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Saved</h1>
-        <p className="text-sm text-muted-foreground">Bookmark recommendations to compare later.</p>
+        <h1 className="text-xl font-semibold tracking-tight">{t('pageTitle')}</h1>
+        <p className="text-sm text-muted-foreground">{t('pageSubtitle')}</p>
       </div>
       <ComingSoon
         icon={Bookmark}
-        title="Saved items are on the roadmap"
-        description="In the meantime, organize related analyses using My Projects."
+        title={t('roadmapTitle')}
+        description={t('roadmapDesc')}
       />
     </div>
   );
 }
+

@@ -1,0 +1,548 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "search": "Search",
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "tryAgain": "Try again",
+    "viewAll": "View all",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "saving": "Saving…",
+    "unsavedChanges": "Unsaved changes",
+    "noResults": "No results found.",
+    "comingSoon": "Coming Soon",
+    "learnMore": "Learn more",
+    "all": "All"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "newAnalysis": "New Analysis",
+    "myProjects": "My Projects",
+    "foodDatabase": "Food Database",
+    "packagingMaterials": "Packaging Materials",
+    "reports": "Reports",
+    "saved": "Saved",
+    "learn": "Learn",
+    "settings": "Settings"
+  },
+  "sidebar": {
+    "tagline": "Smarter Packaging, Healthier Food",
+    "sustainablePackaging": "Sustainable Packaging",
+    "betterTomorrow": "for a Better Tomorrow",
+    "brandName": "FoodPack AI"
+  },
+  "topbar": {
+    "searchPlaceholder": "Search food (e.g., mango, rice, tomato…)",
+    "navigation": "Navigation",
+    "account": "Account"
+  },
+  "dashboard": {
+    "heroBadge": "AI-assisted, science-backed",
+    "heroTitle": "Welcome back. Better Packaging for a Healthier Tomorrow.",
+    "heroSubtitle": "Select your food, answer a few simple questions, and get a scientific packaging recommendation with technical specs, cost, and sustainability insight.",
+    "newAnalysisBtn": "New Packaging Analysis",
+    "analysesRun": "Analyses run",
+    "savedProjects": "Saved projects",
+    "commoditiesAnalyzed": "Commodities analyzed",
+    "reportsGenerated": "Reports generated",
+    "whatAreYouPackaging": "What are you packaging?",
+    "startNewAnalysis": "Start a New Analysis",
+    "startNewAnalysisDesc": "Choose the right module for your product to get a tailored packaging recommendation.",
+    "freshProduceModule": "Fresh Fruits & Vegetables",
+    "freshProduceModuleDesc": "Respiration · MAP · Ripening · Ethylene",
+    "otherCommoditiesModule": "Other Food Commodities",
+    "otherCommoditiesModuleDesc": "Grains · Dairy · Beverages · Spices · Bakery",
+    "notSureModule": "Not sure which module? See the guide →",
+    "recentAnalyses": "Recent analyses",
+    "noAnalysesYet": "No analyses yet — start your first packaging analysis.",
+    "quickActions": "Quick actions",
+    "freshProduce": "🌿 Fresh Produce",
+    "otherCommodity": "📦 Other Commodity",
+    "daysTarget": "days target",
+    "viewAll": "View all"
+  },
+  "newAnalysis": {
+    "backToDashboard": "Back to Dashboard",
+    "pageTitle": "Start a New Analysis",
+    "pageSubtitle": "Choose the right module for your food product. The two modules use different scientific models — selecting the correct one gives you more accurate results.",
+    "freshProduceTitle": "Fresh Fruits & Vegetables",
+    "freshProduceSubtitle": "For fresh, living produce with active respiration",
+    "freshProduceDesc": "Uses the FoodPack Fresh Produce Engine — accounts for respiration rates, ethylene sensitivity, ripening, and modified atmosphere packaging to extend shelf life.",
+    "freshProduceExamplesLabel": "Examples:",
+    "freshProduceCapabilities": "What this module analyses:",
+    "otherCommoditiesTitle": "Other Food Commodities",
+    "otherCommoditiesSubtitle": "For processed, dried, and non-living food products",
+    "otherCommoditiesDesc": "Uses the General Food Commodities Engine — evaluates moisture, oxygen, light sensitivity, pH, fat content, and barrier requirements.",
+    "otherCommoditiesCapabilities": "What this module analyses:",
+    "quickHelp": "Quick help: which module do I use?",
+    "quickHelpTitle": "Not sure which module?",
+    "quickHelpFreshRule": "Use Fresh Fruits & Vegetables for any product that is still alive after harvest — it respires, ripens, and produces ethylene.",
+    "quickHelpOtherRule": "Use Other Food Commodities for any product that has been processed, cooked, dried, fermented, or otherwise transformed from its raw state.",
+    "quickHelpBorderline": "Borderline cases:",
+    "quickHelpBorderlineCases": "Minimally-processed salads → Fresh. Dried fruits → Other Commodities. Cheese → Other Commodities. Fresh herbs → Fresh.",
+    "startFreshAnalysis": "Start Fresh Produce Analysis",
+    "startOtherAnalysis": "Start Other Commodities Analysis",
+    "freshProduceBadge": "Fresh Produce Engine",
+    "otherCommoditiesBadge": "General Food Engine",
+    "freshCapabilities": [
+      "Respiration & ripening analysis",
+      "Ethylene sensitivity consideration",
+      "O₂ / CO₂ requirements",
+      "MAP (Modified Atmosphere Packaging)",
+      "Breathable & micro-perforated packaging",
+      "Temperature & chilling injury analysis",
+      "Humidity management",
+      "Fresh-produce shelf-life prediction"
+    ],
+    "otherCapabilities": [
+      "Moisture & humidity analysis",
+      "pH & acidity evaluation",
+      "Fat / oil oxidation analysis",
+      "Microbial stability assessment",
+      "Light & oxygen barrier requirements",
+      "Mechanical protection for fragile products",
+      "Sealability & hermetic requirements",
+      "Aroma retention (coffee, spices)"
+    ],
+    "freshFeatureEmojis": {
+      "fresh": "Fresh produce",
+      "respiration": "Respiration & ripening",
+      "ethylene": "Ethylene sensitivity",
+      "map": "MAP & perforation",
+      "temp": "Temperature sensitive",
+      "shelf": "Shorter shelf life"
+    },
+    "otherFeatureEmojis": {
+      "grains": "Grains & cereals",
+      "dairy": "Dairy",
+      "meat": "Meat & poultry",
+      "bakery": "Bakery & snacks",
+      "beverages": "Beverages",
+      "frozen": "Frozen foods",
+      "processed": "Processed foods"
+    }
+  },
+  "freshProducePage": {
+    "chooseModule": "Choose Module",
+    "title": "Fresh Fruits & Vegetables",
+    "subtitle": "Fresh Produce Engine — respiration, ripening, MAP & ethylene-aware analysis"
+  },
+  "otherCommoditiesPage": {
+    "chooseModule": "Choose Module",
+    "title": "Other Food Commodities",
+    "subtitle": "General commodities engine — moisture, oxygen, barrier & stability analysis"
+  },
+  "wizard": {
+    "steps": {
+      "food": "Food",
+      "storage": "Storage",
+      "requirements": "Requirements",
+      "results": "Results"
+    },
+    "selectFood": "Select Food",
+    "searchFood": "Search food…",
+    "noFoodFound": "No food found.",
+    "selectFoodPrompt": "Select a food to continue",
+    "storageCondition": "Storage Condition",
+    "targetShelfLife": "Target Shelf Life",
+    "transportDistance": "Transport Distance",
+    "analysisObjective": "Analysis Objective",
+    "runAnalysis": "Run Analysis",
+    "runningAnalysis": "Running analysis…",
+    "analysisFailed": "Analysis failed",
+    "analysisComplete": "Analysis complete",
+    "viewResults": "View Results",
+    "days": "days"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account, preferences and application settings.",
+    "tabs": {
+      "general": "General",
+      "account": "Account",
+      "analysis": "Analysis",
+      "units": "Units & Standards",
+      "sources": "Data Sources",
+      "notifications": "Notifications",
+      "security": "Security"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "subtitle": "Customize how the application looks.",
+      "theme": "Theme",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "themeSystem": "System",
+      "accentColor": "Accent Color",
+      "fontSize": "Font Size",
+      "fontSmall": "Small",
+      "fontMedium": "Medium",
+      "fontLarge": "Large",
+      "themeToast": "Theme set to {theme}",
+      "accentToast": "Accent color changed to {color}",
+      "fontToast": "Font size set to {size}"
+    },
+    "units": {
+      "title": "Units & Measurement",
+      "subtitle": "Choose your preferred units for analysis and display.",
+      "temperature": "Temperature",
+      "weight": "Weight",
+      "distance": "Distance",
+      "pressure": "Pressure",
+      "gasConcentration": "Gas Concentration",
+      "energy": "Energy",
+      "saved": "Unit preferences saved"
+    },
+    "analysisPrefs": {
+      "title": "Analysis Preferences",
+      "subtitle": "Set default options for new packaging analysis.",
+      "defaultModule": "Default Module",
+      "defaultStorage": "Default Storage Condition",
+      "defaultTransport": "Default Transportation Mode",
+      "defaultShelfLife": "Default Shelf Life Range",
+      "analysisObjective": "Analysis Objective",
+      "saved": "Analysis preferences saved"
+    },
+    "dataSources": {
+      "title": "Data Sources",
+      "subtitle": "Select and manage knowledge base sources for food properties.",
+      "fullTitle": "Knowledge Base Sources",
+      "fullSubtitle": "Enable or disable sources used to generate packaging recommendations."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Manage when you want to be notified.",
+      "fullTitle": "Notification Preferences",
+      "fullSubtitle": "Choose when and how you want to be notified.",
+      "analysisComplete": "Analysis completion",
+      "analysisCompleteDesc": "Get notified when analysis is ready",
+      "projectUpdates": "Project updates",
+      "projectUpdatesDesc": "Updates on your saved projects",
+      "newData": "New data sources",
+      "newDataDesc": "When new foods/materials are added",
+      "systemAnnouncements": "System announcements",
+      "systemAnnouncementsDesc": "Important updates and features",
+      "weeklyInsights": "Weekly insights",
+      "weeklyInsightsDesc": "Receive food packaging insights",
+      "monthlyDigest": "Monthly digest",
+      "monthlyDigestDesc": "Monthly summary of your analyses"
+    },
+    "security": {
+      "title": "Security & Privacy",
+      "subtitle": "Manage your account security and data privacy.",
+      "changePassword": "Change Password",
+      "changePasswordDesc": "Update your account password",
+      "twoFactor": "Two-Factor Authentication",
+      "twoFactorDesc": "Add an extra layer of security",
+      "manageSessions": "Manage Sessions",
+      "manageSessionsDesc": "View and manage active sessions",
+      "dataPrivacy": "Data Privacy",
+      "dataPrivacyDesc": "Manage your data and privacy settings",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Permanently delete your account"
+    },
+    "account": {
+      "profileTitle": "Profile Information",
+      "profileSubtitle": "Update your personal details.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "organization": "Organization",
+      "organizationPlaceholder": "Your organization",
+      "role": "Role / Title",
+      "rolePlaceholder": "e.g. Food Scientist",
+      "saveChanges": "Save Changes",
+      "dangerZone": "Danger Zone",
+      "dangerZoneDesc": "These actions are permanent and cannot be undone.",
+      "profileSaved": "Profile saved"
+    },
+    "language": {
+      "title": "Language",
+      "subtitle": "Choose your preferred display language.",
+      "label": "Display Language",
+      "saved": "Language updated to {language}"
+    }
+  },
+  "dialogs": {
+    "password": {
+      "title": "Change Password",
+      "subtitle": "Enter your current password and choose a new one.",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "currentPlaceholder": "••••••••",
+      "newPlaceholder": "Min. 8 characters",
+      "confirmPlaceholder": "Re-enter new password",
+      "passwordMismatch": "Passwords do not match",
+      "updateBtn": "Update Password",
+      "saving": "Saving…",
+      "success": "Password changed successfully"
+    },
+    "twoFactor": {
+      "title": "Two-Factor Authentication",
+      "subtitle": "Add an extra layer of security to your account.",
+      "infoText": "Using an authenticator app like Google Authenticator provides stronger security than SMS codes.",
+      "descText": "When enabled, you'll be prompted for a 6-digit code from your authenticator app each time you sign in.",
+      "enabled": "2FA is currently enabled",
+      "disabled": "2FA is currently disabled",
+      "setUp": "Set Up 2FA",
+      "scanQR": "Scan the QR code below with your authenticator app, then enter the 6-digit code to verify.",
+      "verificationCode": "Verification Code",
+      "codePlaceholder": "Enter 6-digit code",
+      "verifyBtn": "Verify & Enable",
+      "verifying": "Verifying…",
+      "back": "Back",
+      "success": "Two-factor authentication enabled"
+    },
+    "sessions": {
+      "title": "Active Sessions",
+      "subtitle": "Manage devices that are currently signed into your account.",
+      "current": "Current",
+      "revoke": "Revoke",
+      "revokeAll": "Revoke All Others",
+      "done": "Done",
+      "revokeSuccess": "Session revoked",
+      "revokeAllSuccess": "All other sessions revoked",
+      "noSessions": "No active sessions."
+    },
+    "privacy": {
+      "title": "Data Privacy",
+      "subtitle": "Control what data FoodPack AI collects and uses.",
+      "analytics": "Usage Analytics",
+      "analyticsDesc": "Help us improve by sharing anonymous usage data",
+      "crashReports": "Crash Reports",
+      "crashReportsDesc": "Automatically send crash logs to help fix bugs",
+      "personalisation": "Personalisation",
+      "personalisationDesc": "Allow AI recommendations based on your history",
+      "policyText": "Your data is never sold to third parties. Read our",
+      "privacyPolicy": "Privacy Policy",
+      "policyToast": "Privacy policy would open here",
+      "saveSettings": "Save Settings",
+      "saved": "Privacy settings saved"
+    },
+    "delete": {
+      "title": "Delete Account",
+      "subtitle": "This action is permanent and cannot be undone.",
+      "warningText": "All your analyses, projects, and saved data will be permanently deleted. This cannot be reversed.",
+      "confirmLabel": "Type \"{phrase}\" to confirm",
+      "confirmPhrase": "delete my account",
+      "deleteBtn": "Delete My Account",
+      "deleting": "Deleting…",
+      "success": "Account deletion scheduled",
+      "successDesc": "You will receive a confirmation email shortly."
+    }
+  },
+  "foods": {
+    "pageTitle": "Food Database",
+    "pageSubtitle": "Browse and search our validated database of food commodities.",
+    "searchPlaceholder": "Search foods…",
+    "allCategories": "All",
+    "noFoodsFound": "No foods found.",
+    "freshProduce": "Fresh Produce",
+    "commodity": "Commodity",
+    "foodNotFound": "Food not found.",
+    "alsoKnownAs": "Also known as",
+    "analyzePackagingFor": "Analyze packaging for {name}",
+    "properties": "Properties",
+    "insufficientData": "Insufficient validated data.",
+    "confidence": "confidence",
+    "storageConditions": "Storage conditions",
+    "shelfLifeReference": "Shelf-life reference",
+    "sources": "Sources",
+    "days": "days"
+  },
+  "materials": {
+    "pageTitle": "Packaging Materials",
+    "pageSubtitle": "Barrier, mechanical, and sustainability properties for validated packaging materials.",
+    "searchPlaceholder": "Search materials…",
+    "technicalSpecifications": "Technical specifications",
+    "sources": "Sources",
+    "insufficientData": "Insufficient validated data.",
+    "materialNotFound": "Material not found.",
+    "confidence": "confidence",
+    "recyclable": "Recyclable",
+    "notRecyclable": "Not readily recyclable",
+    "biodegradable": "Biodegradable",
+    "monoMaterial": "Mono-material"
+  },
+  "projects": {
+    "pageTitle": "My Projects",
+    "pageSubtitle": "Group related analyses together.",
+    "newProject": "New Project",
+    "name": "Name",
+    "namePlaceholder": "e.g. Q3 Mango Export Line",
+    "description": "Description",
+    "optional": "Optional",
+    "create": "Create",
+    "projectCreated": "Project created.",
+    "couldNotCreate": "Could not create project.",
+    "noProjects": "No projects yet.",
+    "createFirst": "Start your first analysis to create a project.",
+    "analysesCount": "{count} analyses",
+    "projectNotFound": "Project not found.",
+    "noAnalyses": "No analyses in this project yet."
+  },
+  "reports": {
+    "pageTitle": "Reports",
+    "pageSubtitle": "PDF export of your packaging analyses.",
+    "comingSoon": "Reports are coming soon.",
+    "roadmapTitle": "PDF report generation is on the roadmap",
+    "roadmapDesc": "Once available, every completed analysis will export a report covering requirements, the recommendation, alternatives, cost, sustainability, and cited sources."
+  },
+  "saved": {
+    "pageTitle": "Saved",
+    "pageSubtitle": "Bookmark recommendations to compare later.",
+    "noSaved": "Nothing saved yet.",
+    "browseAnalyses": "Browse analyses",
+    "roadmapTitle": "Saved items are on the roadmap",
+    "roadmapDesc": "In the meantime, organize related analyses using My Projects."
+  },
+  "learn": {
+    "pageTitle": "Learn",
+    "pageSubtitle": "A short glossary of the packaging-science terms behind every recommendation — so the numbers on your results page actually mean something.",
+    "glossary": {
+      "otr": {
+        "term": "OTR — Oxygen Transmission Rate",
+        "definition": "How much oxygen passes through a packaging film per day, per unit area (cc/m²/day). Lower OTR means a stronger oxygen barrier — important for oxidation-sensitive foods like nuts, chips, and coffee."
+      },
+      "wvtr": {
+        "term": "WVTR — Water Vapor Transmission Rate",
+        "definition": "How much moisture vapor passes through a film per day, per unit area (g/m²/day). Dry goods need a low WVTR to stay dry; some fresh produce actually needs a moderate WVTR to avoid condensation."
+      },
+      "map": {
+        "term": "MAP — Modified Atmosphere Packaging",
+        "definition": "Packaging that alters the internal gas composition (O2, CO2) around a fresh product to slow respiration and extend shelf life — done via breathable or micro-perforated films matched to the commodity's respiration rate."
+      },
+      "respiration": {
+        "term": "Respiration rate",
+        "definition": "Fresh fruits and vegetables keep \"breathing\" after harvest, consuming O2 and producing CO2. Packaging must let enough gas exchange happen — too little causes anaerobic spoilage, too much wastes the benefit of MAP."
+      },
+      "monoMaterial": {
+        "term": "Mono-material construction",
+        "definition": "A package built from a single material (rather than a multilayer laminate) is much easier to recycle — a smaller number of distinct materials is one of the sustainability signals FoodPack AI scores."
+      },
+      "waterActivity": {
+        "term": "Water activity (aw)",
+        "definition": "A measure (0–1) of how much \"free\" water is available for microbial growth in a food — distinct from moisture content, and a strong predictor of shelf-life risk."
+      }
+    }
+  },
+  "analysis": {
+    "backToAnalysis": "Back to Analysis",
+    "status": {
+      "PENDING": "Pending",
+      "PROCESSING": "Processing",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "targetShelfLife": "Target shelf life",
+    "days": "days",
+    "recommendations": "Packaging Recommendations",
+    "noRecommendations": "No recommendations available."
+  },
+  "marketing": {
+    "home": {
+      "badge": "SIH 2026 · Problem Statement 26236",
+      "title": "Better Packaging for a Healthier Tomorrow",
+      "subtitle": "FoodPack AI recommends food packaging materials and structures using a validated knowledge base and a deterministic scientific engine — with technical specs, cost, and sustainability insight, explained in plain language.",
+      "startAnalysis": "Start New Analysis",
+      "seeHowItWorks": "See how it works",
+      "trustedBy": "Trusted by food scientists and packaging engineers",
+      "howItWorksTitle": "How it works",
+      "step1Title": "Select your food",
+      "step1Desc": "Choose from a validated database of food commodities — fruits, grains, dairy, spices, and more.",
+      "step2Title": "Answer simple questions",
+      "step2Desc": "Storage, target shelf life, transport distance, and what matters most — no technical jargon required.",
+      "step3Title": "Get a scientific recommendation",
+      "step3Desc": "A deterministic rule engine — not a guessing chatbot — scores real packaging options against your requirements.",
+      "whyFoodpackTitle": "Why FoodPack AI",
+      "explainableTitle": "Explainable, not a black box",
+      "explainableDesc": "Every recommendation shows the scoring breakdown and the \"why\" behind it — barrier fit, cost, sustainability.",
+      "citedTitle": "Built on cited sources",
+      "citedDesc": "Food and packaging data carries a source, confidence level, and unit — never a fabricated number.",
+      "sustainableTitle": "Sustainability-aware",
+      "sustainableDesc": "Compare recyclability, mono-material construction, and biodegradable alternatives alongside cost.",
+      "ctaTitle": "Ready to find the right packaging?",
+      "ctaSubtitle": "No account needed to get started.",
+      "ctaButton": "Start Free Analysis"
+    },
+    "nav": {
+      "howItWorks": "How it works",
+      "features": "Features",
+      "learn": "Learn",
+      "about": "About",
+      "getStarted": "Get Started"
+    },
+    "footer": {
+      "tagline": "Science-backed packaging for a healthier tomorrow.",
+      "copyright": "© 2026 FoodPack AI. All rights reserved."
+    }
+  },
+  "comingSoon": {
+    "title": "Coming Soon",
+    "subtitle": "This page is under construction.",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "errors": {
+    "notFound": "Page not found.",
+    "unauthorized": "You are not authorized to view this page.",
+    "serverError": "A server error occurred.",
+    "invalidLocale": "Invalid language selected."
+  },
+  "about": {
+    "pageTitle": "About FoodPack AI",
+    "statement": "FoodPack AI is built for Smart India Hackathon problem statement {psNumber} — {psTitle}, proposed by the Ministry of Food Processing Industries (MoFPI).",
+    "psTitle": "AI-Based Intelligent Food Packaging Material Recommendation System for Food Commodities",
+    "improperPackaging": "Improper packaging leads to moisture absorption, oxidation, microbial spoilage, and nutrient loss — and packaging material selection today depends heavily on expert knowledge that small food businesses, farmers, and startups often don't have easy access to.",
+    "translationsExplanation": "FoodPack AI translates simple, non-technical questions about a food commodity into the barrier, mechanical, and gas-exchange requirements that actually determine which packaging material and structure will work — using a validated knowledge base and a deterministic scoring engine, with an AI model used only to explain the result in plain language.",
+    "decisionSupportNotice": "It is designed as a decision-support tool to assist industries, farmers, startups, and researchers — not a replacement for experimental validation before commercial production."
+  },
+  "features": {
+    "pageTitle": "Features",
+    "pageSubtitle": "FoodPack AI is a decision-support platform, not a chatbot. Here is what actually powers a recommendation today, and what is coming next.",
+    "liveBadge": "Live",
+    "roadmapBadge": "Roadmap",
+    "f1Title": "Deterministic recommendation engine",
+    "f1Desc": "A rule-based requirement engine, candidate generator, and scoring/optimization pipeline — the material recommendation is computed, not guessed by a language model.",
+    "f2Title": "Fresh-produce respiration & MAP handling",
+    "f2Desc": "Fresh commodities factor in respiration rate and storage conditions, with Modified Atmosphere Packaging suggested only when it is genuinely appropriate.",
+    "f3Title": "Transparent scoring",
+    "f3Desc": "Every candidate is scored on barrier fit, moisture protection, mechanical strength, sealability, shelf life, cost, sustainability, and MAP suitability — and you can see each number.",
+    "f4Title": "Objective-driven optimization",
+    "f4Desc": "Choose maximum shelf life, lowest cost, more sustainable, or balanced — the scoring weights shift accordingly.",
+    "f5Title": "Advanced Mode",
+    "f5Desc": "Professionals can override knowledge-base reference values with lab-measured moisture, pH, fat content, respiration rate, and measured OTR/WVTR.",
+    "f6Title": "AI-explained, not AI-decided",
+    "f6Desc": "Gemini turns the already-computed, structured recommendation into a short plain-English explanation. It never invents a material or a number.",
+    "f7Title": "Cost & sustainability insight",
+    "f7Desc": "Indicative cost ranges and recyclability / mono-material / biodegradability signals for every candidate.",
+    "f8Title": "3D packaging viewer, PDF reports, RAG evidence search",
+    "f8Desc": "An interactive exploded-layer 3D view, downloadable PDF reports, and semantic search over research documents are on the roadmap."
+  },
+  "howItWorks": {
+    "pageTitle": "How it works",
+    "pageSubtitle": "The critical design decision behind FoodPack AI: the AI model never invents the recommendation. It only explains one that a deterministic pipeline already computed.",
+    "pipeline": {
+      "userInput": "User input",
+      "knowledgeBase": "Food knowledge base",
+      "propertyResolver": "Food property resolver",
+      "requirementEngine": "Requirement engine",
+      "candidateGenerator": "Packaging candidate generator",
+      "ruleEngine": "Scientific rule engine & scoring",
+      "optimization": "Optimization (by your chosen objective)",
+      "finalRecommendation": "Final recommendation",
+      "aiExplanation": "Gemini explanation"
+    },
+    "step1Title": "Select your food",
+    "step1Desc": "Choose a commodity from a validated database — no packaging jargon needed.",
+    "step2Title": "Answer simple questions",
+    "step2Desc": "Product state, storage, target shelf life, transport distance, and what matters most to you.",
+    "step3Title": "Get your recommendation",
+    "step3Desc": "A scored, explained recommendation with alternatives, cost, sustainability, and sources."
+  }
+}

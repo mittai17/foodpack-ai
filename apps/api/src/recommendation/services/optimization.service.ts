@@ -176,6 +176,18 @@ export class OptimizationService {
           ranked.unshift(best);
         }
       }
+    } else if (requirement.targetOtrMax !== null && requirement.targetOtrMax <= 100) {
+      // For oxidation-sensitive goods (target OTR <= 100), oxygen barrier is critical
+      // to prevent rancidity. Ensure the lead recommendation meets barrier suitability.
+      const barrierCapable = ranked.filter((r) => r.scoreBreakdown.barrierSuitability >= 50);
+      if (barrierCapable.length > 0 && ranked[0].scoreBreakdown.barrierSuitability < 50) {
+        const bestBarrier = barrierCapable[0];
+        const idx = ranked.indexOf(bestBarrier);
+        if (idx > 0) {
+          ranked.splice(idx, 1);
+          ranked.unshift(bestBarrier);
+        }
+      }
     }
 
     return ranked.map(({ supportsMap: _supportsMap, ...r }, index) => ({

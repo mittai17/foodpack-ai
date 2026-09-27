@@ -116,6 +116,10 @@ export class RequirementEngineService {
       assumptions.push(
         `Fat content (${fat}%) is above the oxidation-sensitivity threshold — prioritizing a low-OTR barrier.`,
       );
+    } else {
+      assumptions.push(
+        'Commodity has low lipid content — standard polymeric packaging OTR is suitable.',
+      );
     }
 
     // --- MAP gas composition (only for commodities with a documented reference) ---
@@ -156,7 +160,10 @@ export class RequirementEngineService {
 
   private readProperty(properties: FoodProperty[], type: string): number | null {
     const prop = properties.find((p) => p.propertyType === type);
-    return prop?.value ?? null;
+    if (!prop) return null;
+    if (prop.value !== null && prop.value !== undefined) return prop.value;
+    if (prop.minValue !== null && prop.maxValue !== null) return (prop.minValue + prop.maxValue) / 2;
+    return prop.minValue ?? prop.maxValue ?? null;
   }
 
   private resolveRespirationRate(

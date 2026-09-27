@@ -717,9 +717,9 @@ const STRUCTURES: StructureSeed[] = [
   },
   {
     slug: 'metallized-snack-pouch', name: 'Metallized BOPP/LDPE Snack Pouch', structureType: 'pouch',
-    description: 'Metallized-film laminate pouch for oxidation-sensitive fried/oily snacks.',
+    description: 'Metallized-film laminate pouch for oxidation-sensitive foods (coffee, nuts, fried/oily snacks).',
     supportsMap: false, microPerforated: false, approxCostMin: 2, approxCostMax: 4, costUnit: '₹/pack',
-    minPackWeightKg: 0.03, maxPackWeightKg: 1, applicableProductForms: ['NUTS_SNACKS'],
+    minPackWeightKg: 0.03, maxPackWeightKg: 2, applicableProductForms: ['NUTS_SNACKS', 'POWDER_SPICE'],
     layers: [
       { order: 1, layerRole: 'OUTER', materialSlug: 'bopp', thicknessMinMicron: 18, thicknessMaxMicron: 20 },
       { order: 2, layerRole: 'BARRIER', materialSlug: 'metallized-pet', thicknessMinMicron: 12, thicknessMaxMicron: 12 },
@@ -728,9 +728,9 @@ const STRUCTURES: StructureSeed[] = [
   },
   {
     slug: 'foil-laminate-sachet', name: 'Aluminum Foil Laminate Sachet', structureType: 'sachet',
-    description: 'Near-hermetic foil-laminate sachet for the most oxidation-sensitive products (coffee, spices).',
+    description: 'Near-hermetic foil-laminate sachet for the most oxidation-sensitive products (coffee, spices, nuts).',
     supportsMap: false, microPerforated: false, approxCostMin: 5, approxCostMax: 8, costUnit: '₹/pack',
-    minPackWeightKg: 0.01, maxPackWeightKg: 0.5, applicableProductForms: ['POWDER_SPICE'],
+    minPackWeightKg: 0.01, maxPackWeightKg: 2, applicableProductForms: ['POWDER_SPICE', 'NUTS_SNACKS'],
     layers: [
       { order: 1, layerRole: 'OUTER', materialSlug: 'pet-film', thicknessMinMicron: 12, thicknessMaxMicron: 12 },
       { order: 2, layerRole: 'BARRIER', materialSlug: 'alu-foil-laminate', thicknessMinMicron: 60, thicknessMaxMicron: 90 },

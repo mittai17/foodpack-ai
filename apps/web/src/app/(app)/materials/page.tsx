@@ -3,23 +3,29 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMaterials } from '@/hooks/use-materials';
+import {
+  getMaterialName,
+  getMaterialDescription,
+  getMaterialTypeName,
+} from '@/lib/i18n-helpers';
 
 export default function MaterialsPage() {
   const [search, setSearch] = useState('');
   const { data: materials, isLoading } = useMaterials({ search });
+  const t = useTranslations('materials');
+  const locale = useLocale();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Packaging Materials</h1>
-        <p className="text-sm text-muted-foreground">
-          Barrier, mechanical, and sustainability properties for validated packaging materials.
-        </p>
+        <h1 className="text-xl font-semibold tracking-tight">{t('pageTitle')}</h1>
+        <p className="text-sm text-muted-foreground">{t('pageSubtitle')}</p>
       </div>
 
       <div className="relative max-w-md">
@@ -27,7 +33,7 @@ export default function MaterialsPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search materials…"
+          placeholder={t('searchPlaceholder')}
           className="pl-9"
         />
       </div>
@@ -40,14 +46,16 @@ export default function MaterialsPage() {
             <Card className="h-full transition-shadow hover:shadow-md">
               <CardContent className="space-y-2 px-4 py-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold">{material.name}</p>
-                  <Badge variant="outline">{material.materialType}</Badge>
+                  <p className="text-sm font-semibold">{getMaterialName(material, locale)}</p>
+                  <Badge variant="outline">{getMaterialTypeName(material.materialType, locale)}</Badge>
                 </div>
-                <p className="line-clamp-2 text-xs text-muted-foreground">{material.description}</p>
+                <p className="line-clamp-2 text-xs text-muted-foreground">
+                  {getMaterialDescription(material, locale)}
+                </p>
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {material.recyclable && <Badge variant="secondary">Recyclable</Badge>}
-                  {material.biodegradable && <Badge variant="secondary">Biodegradable</Badge>}
-                  {material.monoMaterial && <Badge variant="secondary">Mono-material</Badge>}
+                  {material.recyclable && <Badge variant="secondary">{t('recyclable')}</Badge>}
+                  {material.biodegradable && <Badge variant="secondary">{t('biodegradable')}</Badge>}
+                  {material.monoMaterial && <Badge variant="secondary">{t('monoMaterial')}</Badge>}
                 </div>
               </CardContent>
             </Card>
@@ -57,3 +65,4 @@ export default function MaterialsPage() {
     </div>
   );
 }
+

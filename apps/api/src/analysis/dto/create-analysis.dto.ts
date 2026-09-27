@@ -16,10 +16,12 @@ import {
   PRODUCT_STATES,
   STORAGE_TYPES,
   TRANSPORT_TYPES,
+  PACKAGING_FORMATS,
   type ObjectiveType,
   type ProductState,
   type StorageType,
   type TransportType,
+  type PackagingFormat,
 } from '@foodpack/shared';
 
 export class AdvancedInputsDto {
@@ -131,6 +133,11 @@ export class CreateAnalysisDto {
   @IsOptional()
   @IsBoolean()
   advancedMode?: boolean;
+
+  @ApiPropertyOptional({ enum: PACKAGING_FORMATS })
+  @IsOptional()
+  @IsEnum(PACKAGING_FORMATS)
+  packagingFormat?: PackagingFormat;
 
   @ApiPropertyOptional({ type: AdvancedInputsDto })
   @IsOptional()

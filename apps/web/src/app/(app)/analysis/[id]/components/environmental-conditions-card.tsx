@@ -1,6 +1,8 @@
 import { Info, Wind, Droplets, Thermometer, Gauge } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { getFoodName } from '@/lib/i18n-helpers';
 import type { FoodSummary, RequirementSummary } from '@/lib/api/types';
 import type { ConfidenceLevel, StorageType } from '@foodpack/shared';
 
@@ -15,6 +17,7 @@ export function EnvironmentalConditionsCard({
   requirement: RequirementSummary | null;
   shelfLifeConfidence: ConfidenceLevel;
 }) {
+  const locale = useLocale();
   if (!food.isFreshProduce || !requirement) return null;
 
   const storageCondition = food.storageConditions?.find((s) => s.storageType === storageType);
@@ -34,7 +37,7 @@ export function EnvironmentalConditionsCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          {food.name} continues to respire after harvest — consuming O₂ and producing CO₂. Packaging
+          {getFoodName(food, locale)} continues to respire after harvest — consuming O₂ and producing CO₂. Packaging
           must allow enough gas exchange to avoid anaerobic spoilage without wasting the shelf-life
           benefit of a controlled atmosphere.
         </p>
@@ -75,7 +78,7 @@ export function EnvironmentalConditionsCard({
           <p className="flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/20 dark:text-amber-300">
             <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             MAP is indicated by storage/respiration conditions, but no validated recommended gas
-            composition is available yet for {food.name} — experimental validation of O₂/CO₂ targets
+            composition is available yet for {getFoodName(food, locale)} — experimental validation of O₂/CO₂ targets
             is required before commercial use.
           </p>
         )}

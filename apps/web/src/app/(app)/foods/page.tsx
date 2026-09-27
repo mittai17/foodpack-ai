@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,20 +11,21 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useFoods } from '@/hooks/use-foods';
 import { getFoodEmoji } from '@/lib/food-icons';
 import { CategoryPills } from '@/components/food/category-pills';
+import { getFoodName, getCategoryName } from '@/lib/i18n-helpers';
 
 export default function FoodsPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<string | undefined>();
+  const t = useTranslations('foods');
+  const locale = useLocale();
 
   const { data: foods, isLoading } = useFoods({ search, category });
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Food Database</h1>
-        <p className="text-sm text-muted-foreground">
-          Validated commodity properties, storage conditions, and shelf-life references.
-        </p>
+        <h1 className="text-xl font-semibold tracking-tight">{t('pageTitle')}</h1>
+        <p className="text-sm text-muted-foreground">{t('pageSubtitle')}</p>
       </div>
 
       <div className="relative max-w-md">
@@ -31,7 +33,7 @@ export default function FoodsPage() {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search commodities…"
+          placeholder={t('searchPlaceholder')}
           className="pl-9"
         />
       </div>
@@ -48,11 +50,11 @@ export default function FoodsPage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-lg">
                   {getFoodEmoji(food.slug, food.category.slug)}
                 </div>
-                <p className="pt-1 text-sm font-semibold">{food.name}</p>
-                <p className="text-xs text-muted-foreground">{food.category.name}</p>
+                <p className="pt-1 text-sm font-semibold">{getFoodName(food, locale)}</p>
+                <p className="text-xs text-muted-foreground">{getCategoryName(food.category, locale)}</p>
                 {food.isFreshProduce && (
                   <Badge variant="secondary" className="mt-1">
-                    Fresh produce
+                    {t('freshProduce')}
                   </Badge>
                 )}
               </CardContent>

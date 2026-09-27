@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FolderKanban, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,7 @@ import { toast } from 'sonner';
 export default function ProjectsPage() {
   const { data: projects, isLoading } = useProjects();
   const createProject = useCreateProject();
+  const t = useTranslations('projects');
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -26,9 +28,9 @@ export default function ProjectsPage() {
       setName('');
       setDescription('');
       setCreating(false);
-      toast.success('Project created.');
+      toast.success(t('projectCreated'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not create project.');
+      toast.error(error instanceof Error ? error.message : t('couldNotCreate'));
     }
   }
 
@@ -36,12 +38,12 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">My Projects</h1>
-          <p className="text-sm text-muted-foreground">Group related analyses together.</p>
+          <h1 className="text-xl font-semibold tracking-tight">{t('pageTitle')}</h1>
+          <p className="text-sm text-muted-foreground">{t('pageSubtitle')}</p>
         </div>
         <Button onClick={() => setCreating((v) => !v)}>
           <Plus className="h-4 w-4" />
-          New Project
+          {t('newProject')}
         </Button>
       </div>
 
@@ -49,20 +51,25 @@ export default function ProjectsPage() {
         <Card>
           <CardContent className="space-y-3 px-6 py-6">
             <div className="space-y-1.5">
-              <Label htmlFor="project-name">Name</Label>
-              <Input id="project-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Q3 Mango Export Line" />
+              <Label htmlFor="project-name">{t('name')}</Label>
+              <Input
+                id="project-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={t('namePlaceholder')}
+              />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="project-description">Description</Label>
+              <Label htmlFor="project-description">{t('description')}</Label>
               <Textarea
                 id="project-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Optional"
+                placeholder={t('optional')}
               />
             </div>
             <Button onClick={handleCreate} disabled={createProject.isPending || !name.trim()}>
-              Create
+              {t('create')}
             </Button>
           </CardContent>
         </Card>
@@ -74,7 +81,7 @@ export default function ProjectsPage() {
         <Card>
           <CardContent className="flex flex-col items-center gap-3 px-6 py-16 text-center">
             <FolderKanban className="h-8 w-8 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">No projects yet.</p>
+            <p className="text-sm text-muted-foreground">{t('noProjects')}</p>
           </CardContent>
         </Card>
       )}
@@ -89,7 +96,7 @@ export default function ProjectsPage() {
                   <p className="line-clamp-2 text-xs text-muted-foreground">{project.description}</p>
                 )}
                 <p className="pt-1 text-xs text-muted-foreground">
-                  {project._count?.analyses ?? 0} analyses
+                  {t('analysesCount', { count: project._count?.analyses ?? 0 })}
                 </p>
               </CardContent>
             </Card>
@@ -99,3 +106,4 @@ export default function ProjectsPage() {
     </div>
   );
 }
+
