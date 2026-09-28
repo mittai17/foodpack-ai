@@ -83,12 +83,17 @@ export class ScoringService {
     transportType: TransportType,
     structureSupportsMap: boolean,
   ): CandidateScore {
+    // In barrier packaging science, OTR spans 0.1 to 10,000 cc/m²/day and
+    // WVTR spans 0.1 to 200 g/m²/day. For tight target bands (e.g. OTR 0-5 for
+    // oxidation-sensitive goods), an OTR of 10-15 is still a very strong oxygen barrier.
+    // Setting minDecayTolerance prevents scores from dropping to 0 on minor differences.
     const barrierSuitability =
       raw.representativeOtr !== null && requirement.targetOtrMin !== null
         ? rangeFitScore(
             raw.representativeOtr,
             requirement.targetOtrMin,
             requirement.targetOtrMax!,
+            50,
           )
         : 50; // insufficient data on either side — neutral, not penalized nor rewarded
 
@@ -98,6 +103,7 @@ export class ScoringService {
             raw.representativeWvtr,
             requirement.targetWvtrMin,
             requirement.targetWvtrMax!,
+            20,
           )
         : 50;
 

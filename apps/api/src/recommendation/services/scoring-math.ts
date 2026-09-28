@@ -4,9 +4,14 @@
  * band-width of distance past the edge. Deliberately simple/explainable —
  * no fabricated precision.
  */
-export function rangeFitScore(value: number, min: number, max: number): number {
+export function rangeFitScore(
+  value: number,
+  min: number,
+  max: number,
+  minDecayTolerance = 0,
+): number {
   if (value >= min && value <= max) return 100;
-  const width = Math.max(max - min, 1e-6);
+  const width = Math.max(max - min, minDecayTolerance, 1e-6);
   const distance = value < min ? min - value : value - max;
   const score = 100 * (1 - Math.min(distance / width, 1));
   return Math.max(0, Math.round(score));

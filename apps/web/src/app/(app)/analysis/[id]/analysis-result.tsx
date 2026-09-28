@@ -151,7 +151,7 @@ export function AnalysisResult({ id }: { id: string }) {
             packageWeightKg={analysis.packageWeightKg}
             mapRecommended={analysis.requirement?.mapRecommended ?? false}
           />
-          <WhyAndSpecsSection recommendation={recommended} requirement={analysis.requirement} />
+          <WhyAndSpecsSection recommendation={recommended} requirement={analysis.requirement} isFreshProduce={analysis.food.isFreshProduce} />
           <EnvironmentalConditionsCard
             food={analysis.food}
             storageType={analysis.storageType}
@@ -441,9 +441,11 @@ function SpecTile({
 function WhyAndSpecsSection({
   recommendation,
   requirement,
+  isFreshProduce,
 }: {
   recommendation: RecommendationCandidate;
   requirement: RequirementSummary | null;
+  isFreshProduce?: boolean;
 }) {
   const structure = recommendation.structure;
   const otr = structure ? findMinProperty(structure.layers, 'OTR') : null;
@@ -486,7 +488,7 @@ function WhyAndSpecsSection({
                 Performance Score Breakdown
               </h3>
             </div>
-            <ScoreBreakdown breakdown={recommendation.scoreBreakdown} />
+            <ScoreBreakdown breakdown={recommendation.scoreBreakdown} isFreshProduce={isFreshProduce} />
           </div>
 
           {/* Right Column: Technical Specifications */}
@@ -580,35 +582,52 @@ function SpecRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ScoreBreakdown({ breakdown }: { breakdown: Record<string, number> }) {
+function ScoreBreakdown({
+  breakdown,
+  isFreshProduce,
+}: {
+  breakdown: Record<string, number>;
+  isFreshProduce?: boolean;
+}) {
   const labels: Record<string, string> = {
-    barrierSuitability: 'Keeps oxygen out',
-    moistureProtection: 'Keeps moisture out',
+    barrierSuitability: isFreshProduce
+      ? 'Gas exchange (respiration balance)'
+      : 'Oxygen barrier (prevents oxidation)',
+    moistureProtection: isFreshProduce
+      ? 'Humidity control (prevents condensation)'
+      : 'Moisture barrier (keeps dry)',
     mechanicalSuitability: 'Survives handling & transport',
-    sealability: 'Seals properly',
-    shelfLifePotential: 'Keeps product fresh long enough',
-    cost: 'Affordable',
-    sustainability: 'Eco-friendly',
-    mapSuitability: 'Lets product breathe (if needed)',
+    sealability: 'Hermetic seal integrity',
+    shelfLifePotential: 'Shelf-life preservation',
+    cost: 'Cost affordability',
+    sustainability: 'Eco-friendly & recyclable',
+    mapSuitability: 'MAP gas flushing suitability',
   };
 
   return (
     <div className="space-y-2.5">
-      {Object.entries(breakdown).map(([key, value]) => (
-        <div key={key} className="flex items-center gap-3 text-xs">
-          <span className="w-44 shrink-0 text-muted-foreground font-medium">{labels[key] ?? key}</span>
-          <div className="h-2 flex-1 overflow-hidden rounded-full bg-secondary">
-            <div
-              className={cn(
-                'h-full rounded-full transition-all duration-500',
-                value >= 80 ? 'bg-primary' : value >= 50 ? 'bg-amber-500' : 'bg-rose-500'
-              )}
-              style={{ width: `${Math.max(value, 3)}%` }}
-            />
+      {Object.entries(breakdown).map(([key, value]) => {
+        const rounded = Math.round(value);
+        return (
+          <div key={key} className="flex items-center gap-3 text-xs">
+            <span className="w-52 shrink-0 text-muted-foreground font-medium truncate" title={labels[key] ?? key}>
+              {labels[key] ?? key}
+            </span>
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-secondary/80 border border-border/40">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all duration-500',
+                  rounded >= 70 ? 'bg-primary' : rounded >= 40 ? 'bg-amber-500' : rounded > 0 ? 'bg-rose-500' : 'bg-muted-foreground/30'
+                )}
+                style={{ width: `${Math.max(rounded, 4)}%` }}
+              />
+            </div>
+            <span className={cn('w-8 shrink-0 text-right font-semibold', rounded === 0 ? 'text-muted-foreground' : 'text-foreground')}>
+              {rounded}
+            </span>
           </div>
-          <span className="w-8 shrink-0 text-right font-semibold">{Math.round(value)}</span>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

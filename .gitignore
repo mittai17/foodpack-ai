@@ -24,3 +24,4 @@ apps/*/prisma/generated/
 services/ml/.venv/
 services/ml/__pycache__/
 supabase/.temp/
+logs/
