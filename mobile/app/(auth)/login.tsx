@@ -56,7 +56,7 @@ export default function LoginScreen() {
             <Text style={styles.backText}>← Back</Text>
           </Pressable>
           <Text style={styles.title}>Welcome back</Text>
-          <Text style={styles.subtitle}>Sign in to your FoodPack AI account</Text>
+          <Text style={styles.subtitle}>Sign in to your NutriWrap account</Text>
 
           {/* Email */}
           <View style={styles.fieldGroup}>

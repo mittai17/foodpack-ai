@@ -8,6 +8,7 @@ import {
   Dimensions,
   Animated,
   BackHandler,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, usePathname } from 'expo-router';
@@ -152,13 +153,11 @@ export function SidebarDrawer() {
             {/* Header: Brand & Close */}
             <View style={styles.header}>
               <View style={styles.brandRow}>
-                <View style={styles.logoWrap}>
-                  <Text style={styles.logoIcon}>🌱</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.brandTitle}>FoodPack AI</Text>
-                  <Text style={styles.tagline}>AI-assisted packaging intelligence</Text>
-                </View>
+                <Image 
+                  source={require('@/assets/images/nutriwrap-logo.png')}
+                  style={styles.logoImage}
+                  resizeMode="contain"
+                />
                 <Pressable
                   style={styles.closeBtn}
                   onPress={handleClose}
@@ -301,28 +300,11 @@ const createStyles = (colors: ThemeColors, isDark: boolean) =>
     brandRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      justifyContent: 'space-between',
     },
-    logoWrap: {
-      width: 36,
-      height: 36,
-      borderRadius: 10,
-      backgroundColor: colors.primary.muted,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderWidth: 1,
-      borderColor: colors.primary.subtleBorder,
-    },
-    logoIcon: { fontSize: 18 },
-    brandTitle: {
-      fontSize: 16,
-      fontFamily: 'Inter-Bold',
-      color: colors.content.primary,
-    },
-    tagline: {
-      fontSize: 10,
-      fontFamily: 'Inter-Regular',
-      color: colors.content.muted,
+    logoImage: {
+      width: 160,
+      height: 45,
     },
     closeBtn: {
       width: 28,

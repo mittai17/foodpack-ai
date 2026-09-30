@@ -17,12 +17,12 @@ export const LOCALES: LocaleOption[] = [
 ];
 
 export const BRAND_NAMES: Record<SupportedLocale, string> = {
-  en: 'FoodPack AI',
-  hi: 'फूडपैक एआई (FoodPack AI)',
-  ta: 'ஃபுட்பேக் ஏஐ (FoodPack AI)',
-  te: 'ఫుడ్‌ప్యాక్ ఏఐ (FoodPack AI)',
-  kn: 'ಫುಡ್‌ಪ್ಯಾಕ್ ಎಐ (FoodPack AI)',
-  ml: 'ഫുഡ്പാക്ക് എഐ (FoodPack AI)',
+  en: 'NutriWrap',
+  hi: 'न्यूट्रीरैप (NutriWrap)',
+  ta: 'நியூட்ரிவ்ராப் (NutriWrap)',
+  te: 'న్యూట్రివ్రాప్ (NutriWrap)',
+  kn: 'ನ್ಯೂಟ್ರಿವ್ರ್ಯಾಪ್ (NutriWrap)',
+  ml: 'ന്യൂട്രിറാപ്പ് (NutriWrap)',
 };
 
 export const FOOD_TRANSLATIONS: Record<string, Record<SupportedLocale, string>> = {
@@ -1212,12 +1212,12 @@ export const UI_TRANSLATIONS: Record<string, Record<SupportedLocale, string>> = 
     ml: 'സഹായവും പിന്തുണയും',
   },
   about_foodpack: {
-    en: 'About FoodPack AI',
-    hi: 'फूडपैक एआई के बारे में',
-    ta: 'FoodPack AI பற்றி',
-    te: 'FoodPack AI గురించి',
-    kn: 'FoodPack AI ಬಗ್ಗೆ',
-    ml: 'FoodPack AI-യെക്കുറിച്ച്',
+    en: 'About NutriWrap',
+    hi: 'न्यूट्रीरैप के बारे में',
+    ta: 'NutriWrap பற்றி',
+    te: 'NutriWrap గురించి',
+    kn: 'NutriWrap ಬಗ್ಗೆ',
+    ml: 'NutriWrap-യെക്കുറിച്ച്',
   },
   about_foodpack_sub: {
     en: 'v1.0.0 · Built for MoFPI / SIH 2024',
@@ -1372,7 +1372,7 @@ export const UI_TRANSLATIONS: Record<string, Record<SupportedLocale, string>> = 
     ml: 'ഓപ്ഷണൽ: ലാബ് അളവുകൾ അല്ലെങ്കിൽ IoT റീഡിംഗുകൾ ഉപയോഗിച്ച് റഫറൻസ് ഡാറ്റാബേസ് മൂല്യങ്ങൾ മാറ്റുക.',
   },
   advanced_expert_tip: {
-    en: '💡 Leave fields blank to use reference values from the FoodPack AI database. Only fill in values you have measured in a lab or from live IoT sensors.',
+    en: '💡 Leave fields blank to use reference values from the NutriWrap database. Only fill in values you have measured in a lab or from live IoT sensors.',
     hi: '💡 संदर्भ मानों का उपयोग करने के लिए फ़ील्ड खाली छोड़ें। केवल प्रयोगशाला या लाइव IoT सेंसर से मापे गए मान ही भरें।',
     ta: '💡 குறிப்பு மதிப்புகளைப் பயன்படுத்த புலங்களை காலியாக விடவும். ஆய்வகம் அல்லது நேரடி IoT சென்சார்களில் அளவிடப்பட்ட மதிப்புகளை மட்டும் நிரப்பவும்.',
     te: '💡 రిఫరెన్స్ విలువలను ఉపయోగించడానికి ఫీల్డ్‌లను ఖాళీగా ఉంచండి. ల్యాబ్ లేదా లైవ్ IoT సెన్సార్ల నుండి కొలిచిన విలువలను మాత్రమే పూరించండి.',

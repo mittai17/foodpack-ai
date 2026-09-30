@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FoodPack AI",
+    "name": "NutriWrap",
     "slug": "foodpack-ai",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,20 +35,20 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow FoodPack AI to access your camera to identify food items.",
+          "cameraPermission": "Allow NutriWrap to access your camera to identify food items.",
           "microphonePermission": false
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow FoodPack AI to access your photos to identify food items."
+          "photosPermission": "Allow NutriWrap to access your photos to identify food items."
         }
       ],
       [
         "expo-secure-store",
         {
-          "faceIDPermission": "Allow FoodPack AI to use Face ID for secure authentication."
+          "faceIDPermission": "Allow NutriWrap to use Face ID for secure authentication."
         }
       ]
     ],

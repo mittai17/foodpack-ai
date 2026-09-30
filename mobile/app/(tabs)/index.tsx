@@ -18,6 +18,7 @@ import {
   StyleSheet,
   RefreshControl,
   TextInput,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -141,8 +142,11 @@ export default function DashboardScreen() {
           <Text style={styles.topHamburger}>☰</Text>
         </Pressable>
         <View style={styles.topBrandCenter}>
-          <Text style={styles.topBrandIcon}>🌱</Text>
-          <Text style={styles.topBrandName}>FoodPack AI</Text>
+          <Image
+            source={require('../../assets/images/nutriwrap-logo.png')}
+            style={styles.topBrandLogo}
+            resizeMode="contain"
+          />
         </View>
         <Pressable
           style={styles.topIconBtn}
@@ -692,15 +696,11 @@ const createStyles = (C: ThemeColors, isDark: boolean) =>
     topBrandCenter: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 6,
+      justifyContent: 'center',
     },
-    topBrandIcon: {
-      fontSize: 18,
-    },
-    topBrandName: {
-      fontSize: 16,
-      fontFamily: 'Inter-Bold',
-      color: C.content.primary,
+    topBrandLogo: {
+      width: 180,
+      height: 48,
     },
     topGearIcon: {
       fontSize: 16,

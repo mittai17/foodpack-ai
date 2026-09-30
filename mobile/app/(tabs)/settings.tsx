@@ -212,7 +212,7 @@ export default function SettingsScreen() {
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>Platform Settings</Text>
-          <Text style={styles.headerSub}>FoodPack AI · Ministry of Food Processing Industries</Text>
+          <Text style={styles.headerSub}>NutriWrap · Ministry of Food Processing Industries</Text>
         </View>
         <Pressable
           style={styles.doneBtn}
@@ -860,7 +860,7 @@ export default function SettingsScreen() {
             <View style={styles.card}>
               <Text style={styles.cardTitle}>Scientific Reference Databases</Text>
               <Text style={styles.cardDesc}>
-                FoodPack AI correlates recommendations exclusively against peer-reviewed post-harvest research and official grading standards.
+                NutriWrap correlates recommendations exclusively against peer-reviewed post-harvest research and official grading standards.
               </Text>
 
               {[
@@ -1106,7 +1106,7 @@ export default function SettingsScreen() {
 
             {/* Platform Metadata */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>FoodPack AI Platform</Text>
+              <Text style={styles.cardTitle}>NutriWrap Platform</Text>
               <Text style={styles.cardDesc}>
                 Built for Smart India Hackathon Problem Statement 26236 proposed by the Ministry of Food Processing Industries.
               </Text>

@@ -123,7 +123,7 @@ export default function MoreScreen() {
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>Platform Hub</Text>
-          <Text style={styles.headerSubtitle}>FoodPack AI System Navigation</Text>
+          <Text style={styles.headerSubtitle}>NutriWrap System Navigation</Text>
         </View>
         <Pressable
           style={styles.settingsBtn}
@@ -253,7 +253,7 @@ export default function MoreScreen() {
 
         {/* App version footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>FoodPack AI · Production Build v1.0.0</Text>
+          <Text style={styles.footerText}>NutriWrap · Production Build v1.0.0</Text>
           <Text style={styles.footerText}>Built for SIH 2024 · Problem Statement 26236</Text>
           <Text style={styles.footerText}>Ministry of Food Processing Industries (MoFPI)</Text>
         </View>

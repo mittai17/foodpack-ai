@@ -57,7 +57,7 @@ export default function WelcomeScreen() {
             <View style={styles.logoGlow} />
           </View>
 
-          <Text style={styles.appName}>FoodPack AI</Text>
+          <Text style={styles.appName}>NutriWrap</Text>
           <Text style={styles.tagline}>
             Science-backed packaging recommendations{'\n'}for every food commodity
           </Text>

@@ -55,7 +55,7 @@ export default function RegisterScreen() {
             <Text style={styles.backText}>← Back</Text>
           </Pressable>
           <Text style={styles.title}>Create account</Text>
-          <Text style={styles.subtitle}>Join FoodPack AI and start analysing</Text>
+          <Text style={styles.subtitle}>Join NutriWrap and start analysing</Text>
 
           {[
             { label: 'Full name (optional)', value: name, set: setName, key: 'name', placeholder: 'Dr. Priya Sharma', type: 'default' as const },
