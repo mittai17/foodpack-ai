@@ -1,0 +1,111 @@
+name: foodpack-ai-prod
+
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /api/v1
+        NEXT_PUBLIC_MAPBOX_TOKEN: ${NEXT_PUBLIC_MAPBOX_TOKEN:-}
+        NEXT_PUBLIC_OPEN_METEO_API_URL: ${NEXT_PUBLIC_OPEN_METEO_API_URL:-https://api.open-meteo.com/v1/forecast}
+    container_name: foodpack-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: /api/v1
+      NEXT_PUBLIC_MAPBOX_TOKEN: ${NEXT_PUBLIC_MAPBOX_TOKEN:-}
+      NEXT_PUBLIC_OPEN_METEO_API_URL: ${NEXT_PUBLIC_OPEN_METEO_API_URL:-https://api.open-meteo.com/v1/forecast}
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: dokploy-network
+      traefik.http.middlewares.foodpack-redirect-https.redirectscheme.scheme: https
+      traefik.http.routers.foodpack-web.entrypoints: web
+      traefik.http.routers.foodpack-web.rule: Host(`nutriwarp.spadevity.tech`)
+      traefik.http.routers.foodpack-web.priority: "1"
+      traefik.http.routers.foodpack-web.middlewares: foodpack-redirect-https
+      traefik.http.routers.foodpack-web-secure.entrypoints: websecure
+      traefik.http.routers.foodpack-web-secure.rule: Host(`nutriwarp.spadevity.tech`)
+      traefik.http.routers.foodpack-web-secure.priority: "1"
+      traefik.http.routers.foodpack-web-secure.tls: "true"
+      traefik.http.routers.foodpack-web-secure.tls.certresolver: letsencrypt
+      traefik.http.services.foodpack-web.loadbalancer.server.port: "3000"
+    networks:
+      - default
+      - dokploy-network
+
+  api:
+    build:
+      context: ../..
+      dockerfile: apps/api/Dockerfile
+    container_name: foodpack-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://foodpack:foodpack-change-me@postgres:5432/foodpack
+      DIRECT_URL: postgresql://foodpack:foodpack-change-me@postgres:5432/foodpack
+      NODE_ENV: production
+      PORT: 4000
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      REDIS_URL: redis://redis:6379
+      WEB_ORIGIN: ${WEB_ORIGIN:-https://nutriwarp.spadevity.tech}
+    command: sh -lc "pnpm exec prisma migrate deploy && pnpm prisma:seed && pnpm start:prod"
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: dokploy-network
+      traefik.http.routers.foodpack-api.entrypoints: web
+      traefik.http.routers.foodpack-api.rule: Host(`nutriwarp.spadevity.tech`) && PathPrefix(`/api`)
+      traefik.http.routers.foodpack-api.priority: "10"
+      traefik.http.routers.foodpack-api.middlewares: foodpack-redirect-https
+      traefik.http.routers.foodpack-api-secure.entrypoints: websecure
+      traefik.http.routers.foodpack-api-secure.rule: Host(`nutriwarp.spadevity.tech`) && PathPrefix(`/api`)
+      traefik.http.routers.foodpack-api-secure.priority: "10"
+      traefik.http.routers.foodpack-api-secure.tls: "true"
+      traefik.http.routers.foodpack-api-secure.tls.certresolver: letsencrypt
+      traefik.http.services.foodpack-api.loadbalancer.server.port: "4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - default
+      - dokploy-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: foodpack-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - foodpack_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: foodpack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: foodpack
+      POSTGRES_PASSWORD: foodpack-change-me
+      POSTGRES_DB: foodpack
+    volumes:
+      - foodpack_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foodpack -d foodpack"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  foodpack_redis_data:
+  foodpack_postgres_data:
+
+networks:
+  dokploy-network:
+    external: true
