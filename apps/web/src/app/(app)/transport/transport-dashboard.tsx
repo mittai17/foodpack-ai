@@ -46,6 +46,22 @@ import type {
 // ─── Constants ────────────────────────────────────────────────────────────
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
 
+/**
+ * `crypto.randomUUID()` only exists in secure contexts (HTTPS or localhost).
+ * The app is also served over plain HTTP on a bare IP, where it's undefined
+ * and throws — fall back to a non-cryptographic UUID v4 there.
+ */
+function uuid(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 const TRANSPORT_MODES: { id: TransportMode; label: string; icon: React.ReactNode }[] = [
   { id: 'road',  label: 'Road',  icon: <Truck   className="h-4 w-4" /> },
   { id: 'rail',  label: 'Rail',  icon: <Train   className="h-4 w-4" /> },
@@ -269,7 +285,7 @@ function buildMockResult(
   const iotSnapshot = getIoTSnapshot();
 
   return {
-    id: crypto.randomUUID(),
+    id: uuid(),
     source: src, destination: dst, transportMode: mode, departureTime,
     foodSlug: foods[0]?.foodSlug, foodName: foods.map((f) => f.foodName).join(', '),
     isFreshProduce: isFresh,
@@ -638,7 +654,7 @@ export function TransportDashboard() {
   const canAnalyse = !!source && !!destination && foodItems.length > 0 && !isRunning;
 
   const addFoodItem = useCallback((item: Omit<FoodLoadItem, 'id'>) => {
-    setFoodItems((prev) => [...prev, { ...item, id: crypto.randomUUID() }]);
+    setFoodItems((prev) => [...prev, { ...item, id: uuid() }]);
   }, []);
 
   const removeFoodItem = useCallback((id: string) => {
@@ -680,7 +696,7 @@ export function TransportDashboard() {
       const assessment = evaluateAssessment(impact);
 
       setResult({
-        id: crypto.randomUUID(), source, destination, transportMode: mode, departureTime,
+        id: uuid(), source, destination, transportMode: mode, departureTime,
         foodSlug: foodItems[0]?.foodSlug,
         foodName: foodItems.map((f) => f.foodName).join(', '),
         isFreshProduce: hasFreshProduce,
